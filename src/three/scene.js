@@ -297,6 +297,11 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
     drag.velocityPitch = 0;
   }
 
+  function shouldUseMobilePose() {
+    if (isMobileViewport) return true;
+    return document.documentElement.getAttribute('data-active-panel') === 'contact';
+  }
+
   function dragTo(x, y, pointerId = null) {
     if (!drag.active) return;
     if (drag.pointerId !== null && pointerId !== null && drag.pointerId !== pointerId) return;
@@ -306,7 +311,7 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
     drag.lastX = x;
     drag.lastY = y;
 
-    const dragSensitivity = isMobileViewport ? 0.72 : 1;
+    const dragSensitivity = shouldUseMobilePose() ? 0.72 : 1;
     const yawDelta = (dx / Math.max(window.innerWidth, 1)) * 4.4 * dragSensitivity;
     const pitchDelta = (dy / Math.max(window.innerHeight, 1)) * 2.9 * dragSensitivity;
 
@@ -337,13 +342,14 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
   function update(state, pointer, elapsed = 0) {
     hover.glow = MathUtils.lerp(hover.glow, hover.highlighted >= 0 ? 1 : 0, 0.12);
 
-    const viewportMotionScale = isMobileViewport ? 0.58 : 1;
-    const baseYaw = isMobileViewport ? MOBILE_BASE_Y_ROTATION : BASE_Y_ROTATION;
-    const basePitch = isMobileViewport ? MOBILE_BASE_X_ROTATION : BASE_X_ROTATION;
+    const useMobilePose = shouldUseMobilePose();
+    const viewportMotionScale = useMobilePose ? 0.58 : 1;
+    const baseYaw = useMobilePose ? MOBILE_BASE_Y_ROTATION : BASE_Y_ROTATION;
+    const basePitch = useMobilePose ? MOBILE_BASE_X_ROTATION : BASE_X_ROTATION;
     const px = MathUtils.clamp(pointer.x, -0.38, 0.38) * viewportMotionScale;
     const py = MathUtils.clamp(pointer.y, -0.34, 0.34) * viewportMotionScale;
-    const parallaxWeight = (drag.active ? 0.16 : 1) * (isMobileViewport ? 0.72 : 1);
-    const floatScale = isMobileViewport ? 0.58 : 1;
+    const parallaxWeight = (drag.active ? 0.16 : 1) * (useMobilePose ? 0.72 : 1);
+    const floatScale = useMobilePose ? 0.58 : 1;
 
     const floatA = Math.sin(elapsed * 0.52);
     const floatB = Math.cos(elapsed * 0.36);

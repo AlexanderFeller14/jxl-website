@@ -38,8 +38,8 @@ const BEATS = {
     ambientIntensity: 0.4
   },
   contact: {
-    cameraPos: [0.16, 0.67, 5.7],
-    target: [0.03, 0.18, 0],
+    cameraPos: [0.02, 0.84, 5.12],
+    target: [0.0, 0.2, 0.02],
     frameSpread: 0.95,
     frameDepth: 0.5,
     frameGridness: 0.7,
