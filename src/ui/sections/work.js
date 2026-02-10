@@ -67,7 +67,16 @@ export function workSection() {
         data-image="${item.image}"
         aria-label="Case öffnen: ${item.title}"
       >
-        <div class="work-thumb" data-image="${item.image}" style="background-image:url('/media/${item.image}')"></div>
+        <div class="work-thumb is-loading" data-image="${item.image}">
+          <img
+            class="work-main-image"
+            data-work-main-image
+            data-work-index="${item.id - 1}"
+            data-src="/media/${item.image}"
+            alt=""
+            decoding="async"
+          />
+        </div>
       </button>
     `;
   }).join('');
@@ -82,7 +91,15 @@ export function workSection() {
         aria-label="Bild ${index + 1} anzeigen"
         aria-pressed="${isActive ? 'true' : 'false'}"
       >
-        <img src="/media/${item.image}" alt="" loading="lazy" decoding="async" />
+        <img
+          data-work-thumb-image
+          data-work-index="${index}"
+          data-src="/media/${item.image}"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
+        />
       </button>
     `;
   }).join('');
