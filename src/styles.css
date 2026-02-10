@@ -297,7 +297,7 @@ textarea {
   position: absolute;
   top: 14px;
   left: 14px;
-  z-index: 9;
+  z-index: 8;
   width: min(450px, 40vw);
   max-width: 450px;
   border: 1px solid rgba(194, 218, 255, 0.24);
@@ -317,7 +317,7 @@ textarea {
   position: absolute;
   top: 14px;
   right: 14px;
-  z-index: 9;
+  z-index: 8;
   width: min(350px, 33vw);
   border: 0;
   border-radius: var(--radius-lg);
@@ -346,7 +346,7 @@ textarea {
 
 .window-stack {
   position: relative;
-  z-index: 5;
+  z-index: 12;
   height: 100%;
   padding: clamp(16px, 1.8vw, 24px);
   display: flex;
@@ -675,19 +675,10 @@ h3 {
 #panel-contact {
   width: 100%;
   max-width: none;
+  height: auto;
+  max-height: calc(100% - 10px);
+  align-self: flex-start;
   background: var(--panel-strong);
-}
-
-#panel-work {
-  height: auto;
-  max-height: calc(100% - 10px);
-  align-self: flex-start;
-}
-
-#panel-contact {
-  height: auto;
-  max-height: calc(100% - 10px);
-  align-self: flex-start;
 }
 
 .work-body {
@@ -1407,11 +1398,6 @@ h3 {
 }
 
 @media (min-width: 1200px) {
-  #panel-work {
-    margin-top: 0;
-    align-self: center;
-  }
-
   #panel-contact {
     margin-top: 0;
     align-self: center;
@@ -1434,12 +1420,28 @@ h3 {
 
   .window-stack {
     padding: 14px;
+    position: relative;
+    z-index: 13;
   }
 
   #panel-home,
   #panel-work,
   #panel-contact {
     width: 100%;
+  }
+
+  #panel-work,
+  #panel-contact {
+    position: relative;
+    z-index: 12;
+    height: 100%;
+    max-height: 100%;
+    align-self: stretch;
+  }
+
+  .home-widget-persistent,
+  .jazz-widget {
+    z-index: 8;
   }
 
   #panel-home {
@@ -1487,6 +1489,8 @@ h3 {
     min-height: 0;
     flex: 1;
     padding: 10px;
+    position: relative;
+    z-index: 15;
   }
 
   .hero-cta-floating {
@@ -1506,6 +1510,20 @@ h3 {
     min-height: 62vh;
   }
 
+  #panel-work,
+  #panel-contact {
+    position: relative;
+    z-index: 14;
+    height: 100%;
+    max-height: 100%;
+    align-self: stretch;
+  }
+
+  .home-widget-persistent,
+  .jazz-widget {
+    z-index: 7;
+  }
+
   .home-window {
     align-self: stretch;
   }
@@ -1521,11 +1539,6 @@ h3 {
 
   .contact-meta-grid {
     grid-template-columns: 1fr;
-  }
-
-  #panel-contact {
-    height: auto;
-    max-height: none;
   }
 
   .contact-card {
