@@ -1,6 +1,5 @@
 import './styles.css';
 
-import { homeSection } from './ui/sections/home.js';
 import { workSection, getWorkItems } from './ui/sections/work.js';
 import { contactSection } from './ui/sections/contact.js';
 
@@ -34,6 +33,32 @@ app.innerHTML = `
           <div class="grain-overlay"></div>
         </div>
 
+        <aside class="home-widget-persistent" aria-label="JXL Home Widget">
+          <div class="window-body home-body">
+            <section class="home-2026" aria-label="Hero Widget">
+              <h1 id="home-widget-title" class="visually-hidden">jxl-visuals</h1>
+              <div class="home-title-logo-wrap">
+                <img
+                  class="home-title-logo"
+                  src="/media/logo-jxl.png"
+                  alt="JXL Visuals"
+                  loading="eager"
+                  decoding="async"
+                  onerror="this.classList.add('is-hidden'); this.nextElementSibling.classList.add('is-visible')"
+                />
+                <span class="home-title-logo-fallback">JXL Visuals</span>
+              </div>
+              <p class="lede">Cinematic Photo &amp; Film mit Fokus auf Automotive, Commercial und schnelle Social Deliverables.</p>
+              <div class="home-tags" aria-label="Leistungsbereiche">
+                <span>Photo</span>
+                <span>Video</span>
+                <span>Short-form</span>
+                <span>Commercial</span>
+              </div>
+            </section>
+          </div>
+        </aside>
+
         <aside class="jazz-widget" aria-label="Jazz Player Widget">
           <div class="spotify-frame-wrap">
             <iframe
@@ -51,7 +76,6 @@ app.innerHTML = `
         </aside>
 
         <section class="window-stack" aria-live="polite">
-          ${homeSection()}
           ${workSection()}
           ${contactSection()}
         </section>
