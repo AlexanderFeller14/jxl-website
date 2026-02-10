@@ -38,10 +38,22 @@ Lege deine Medien in `public/media/`:
 - JPG/PNG für Work-Items (Dateinamen in `src/ui/sections/work.js` eintragen)
 - optional `showreel.mp4`
 
+Danach Optimized Varianten erzeugen:
+
+```bash
+npm run optimize:media
+```
+
+Das Script erstellt responsive JPEGs in:
+
+- `public/media/optimized/main-900/`
+- `public/media/optimized/main-1800/`
+- `public/media/optimized/thumb-360/`
+
 ### Empfohlene Bildgrößen
 
-- Work/Case Stills: 2400px lange Kante, JPG/WebP, Qualität ~80
-- Thumbnails: 1600x1000 oder 1920x1200
+- Work/Case Stills (Source): 3000-6000px lange Kante, JPG, Qualität 90+
+- Auslieferung erfolgt automatisch über optimierte Varianten (`900/1800/360`)
 
 ### Empfohlene Video Encodes
 

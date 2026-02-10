@@ -1,3 +1,10 @@
+import {
+  createMainImagePath,
+  createMainImageSrcSet,
+  createOriginalMediaPath,
+  createThumbImagePath
+} from '../../utils/media.js';
+
 export function initCaseModal({ items }) {
   const modal = document.createElement('dialog');
   modal.className = 'case-modal';
@@ -29,14 +36,39 @@ export function initCaseModal({ items }) {
     const randomized = shuffle(mediaPool.filter((file) => file !== currentImage));
     return Array.from({ length: 6 }, (_, i) => {
       const file = randomized[i % randomized.length] || currentImage;
-      return `<li><img src="/media/${file}" alt="Gallery ${i + 1}" loading="lazy" onerror="this.style.opacity='0.2'" /></li>`;
+      const thumbPath = createThumbImagePath(file);
+      const fallbackPath = createOriginalMediaPath(file);
+      return `
+        <li>
+          <img
+            src="${thumbPath}"
+            alt="Gallery ${i + 1}"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 820px) 44vw, 240px"
+            onerror="if(!this.dataset.fallback){this.dataset.fallback='true';this.src='${fallbackPath}';}else{this.style.opacity='0.2';}"
+          />
+        </li>
+      `;
     }).join('');
   };
 
   function render(item) {
+    const heroPath = createMainImagePath(item.image);
+    const heroSrcSet = createMainImageSrcSet(item.image);
+    const heroFallbackPath = createOriginalMediaPath(item.image);
+
     content.innerHTML = `
       <div class="case-hero" role="img" aria-label="Case Hero Placeholder">
-        <img src="/media/${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'" />
+        <img
+          src="${heroPath}"
+          srcset="${heroSrcSet}"
+          sizes="(max-width: 980px) 92vw, 920px"
+          alt="${item.title}"
+          loading="lazy"
+          decoding="async"
+          onerror="if(!this.dataset.fallback){this.dataset.fallback='true';this.removeAttribute('srcset');this.src='${heroFallbackPath}';}else{this.style.display='none';}"
+        />
         <span>Case Preview</span>
       </div>
       <p class="case-gallery-title">weitere Bilder</p>

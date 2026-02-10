@@ -1,3 +1,11 @@
+import {
+  createMainImagePath,
+  createMainImageSrcSet,
+  createOriginalMediaPath,
+  createThumbImagePath,
+  createThumbImageSrcSet
+} from '../../utils/media.js';
+
 const MEDIA_FILES = [
   'CK1A1682.JPG',
   'CK1A1879.JPG',
@@ -68,6 +76,10 @@ export function getMediaFiles() {
 
 export function workSection() {
   const cards = WORK_ITEMS.map((item) => {
+    const imagePath = createMainImagePath(item.image);
+    const imageSrcSet = createMainImageSrcSet(item.image);
+    const fallbackImagePath = createOriginalMediaPath(item.image);
+
     return `
       <button
         type="button"
@@ -83,7 +95,11 @@ export function workSection() {
             class="work-main-image"
             data-work-main-image
             data-work-index="${item.id - 1}"
-            data-src="/media/${item.image}"
+            data-src="${imagePath}"
+            data-srcset="${imageSrcSet}"
+            data-sizes="(max-width: 1100px) 92vw, min(84vw, 860px)"
+            data-fallback-src="${fallbackImagePath}"
+            data-fallback-sizes="(max-width: 1100px) 92vw, min(84vw, 860px)"
             alt=""
             decoding="async"
           />
@@ -94,6 +110,10 @@ export function workSection() {
 
   const thumbs = WORK_ITEMS.map((item, index) => {
     const isActive = index === 0;
+    const thumbPath = createThumbImagePath(item.image);
+    const thumbSrcSet = createThumbImageSrcSet(item.image);
+    const fallbackImagePath = createOriginalMediaPath(item.image);
+
     return `
       <button
         type="button"
@@ -105,7 +125,11 @@ export function workSection() {
         <img
           data-work-thumb-image
           data-work-index="${index}"
-          data-src="/media/${item.image}"
+          data-src="${thumbPath}"
+          data-srcset="${thumbSrcSet}"
+          data-sizes="(max-width: 640px) 50px, (max-width: 1100px) 58px, 64px"
+          data-fallback-src="${fallbackImagePath}"
+          data-fallback-sizes="(max-width: 640px) 50px, (max-width: 1100px) 58px, 64px"
           alt=""
           loading="lazy"
           decoding="async"

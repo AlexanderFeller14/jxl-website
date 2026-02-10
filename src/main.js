@@ -217,19 +217,48 @@ function hydrateImage(img, { priority = 'auto', frame = null } = {}) {
 
   if (img.dataset.loaded === 'true') return;
 
+  const srcset = img.dataset.srcset;
+  const sizes = img.dataset.sizes;
+  const fallbackSrc = img.dataset.fallbackSrc;
+  const fallbackSrcSet = img.dataset.fallbackSrcset;
+  const fallbackSizes = img.dataset.fallbackSizes;
+
+  const applySource = (nextSrc, nextSrcSet = '', nextSizes = '') => {
+    if (nextSrcSet) {
+      img.srcset = nextSrcSet;
+    } else {
+      img.removeAttribute('srcset');
+    }
+    if (nextSizes) {
+      img.sizes = nextSizes;
+    } else {
+      img.removeAttribute('sizes');
+    }
+    img.src = nextSrc;
+  };
+
   const markLoaded = () => {
+    img.removeEventListener('load', markLoaded);
+    img.removeEventListener('error', markError);
     img.classList.add('is-loaded');
     frame?.classList.remove('is-loading');
   };
 
   const markError = () => {
+    if (!img.dataset.fallbackTried && fallbackSrc) {
+      img.dataset.fallbackTried = 'true';
+      applySource(fallbackSrc, fallbackSrcSet, fallbackSizes || sizes);
+      return;
+    }
+    img.removeEventListener('load', markLoaded);
+    img.removeEventListener('error', markError);
     frame?.classList.remove('is-loading');
     frame?.classList.add('is-error');
   };
 
-  img.addEventListener('load', markLoaded, { once: true });
-  img.addEventListener('error', markError, { once: true });
-  img.src = src;
+  img.addEventListener('load', markLoaded);
+  img.addEventListener('error', markError);
+  applySource(src, srcset, sizes);
   img.dataset.loaded = 'true';
 
   if (img.complete && img.naturalWidth > 0) {
