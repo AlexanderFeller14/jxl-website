@@ -49,6 +49,16 @@ export function contactSection() {
             Message
             <textarea name="message" rows="6" required placeholder="Erzähl kurz über Projekt, Ziel und Timing."></textarea>
           </label>
+          <label class="contact-honeypot" aria-hidden="true">
+            Website
+            <input
+              type="text"
+              name="website"
+              autocomplete="off"
+              tabindex="-1"
+              inputmode="text"
+            />
+          </label>
           <p class="form-feedback" id="form-feedback" aria-live="polite"></p>
           <button type="submit" class="btn magnetic contact-submit">Let's shoot</button>
         </form>

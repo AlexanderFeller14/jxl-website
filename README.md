@@ -17,6 +17,25 @@ npm run build
 npm run preview
 ```
 
+## Direct Mail Versand (Contact Form)
+
+Das Contact-Form sendet über eine Serverless API-Route per PrivateEmail SMTP:
+
+- Endpoint: `api/contact.js`
+- Versand: `mail.privateemail.com` via Nodemailer
+
+Setze in Vercel unter `Settings -> Environment Variables`:
+
+- `SMTP_HOST=mail.privateemail.com`
+- `SMTP_PORT=465`
+- `SMTP_SECURE=true`
+- `SMTP_USER=alex@jxl-visuals.com`
+- `SMTP_PASS=<dein PrivateEmail Passwort>`
+- `CONTACT_TO_EMAIL=alex@jxl-visuals.com`
+- `CONTACT_FROM_EMAIL=alex@jxl-visuals.com`
+
+Danach neu deployen. Bei Fehlern: `Vercel -> Functions -> api/contact -> Logs`.
+
 ## Customize Text / Colors
 
 - Sections und Texte:

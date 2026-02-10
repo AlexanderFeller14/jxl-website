@@ -14,6 +14,8 @@ import { detectPerfProfile, onVisibilityChange, debounce } from './utils/perf.js
 import { createPointerTracker } from './utils/input.js';
 
 const THEME_STORAGE_KEY = 'jxl-theme';
+const CONTACT_EMAIL = 'alex@jxl-visuals.com';
+const CONTACT_ENDPOINT = '/api/contact';
 
 const app = document.querySelector('#app');
 const workItems = getWorkItems();
@@ -471,33 +473,82 @@ grid.addEventListener('keydown', (event) => {
 const form = document.querySelector('#contact-form');
 const feedback = document.querySelector('#form-feedback');
 
-form.addEventListener('submit', (event) => {
+function setFormFeedback(message, state = 'neutral') {
+  if (!feedback) return;
+  feedback.textContent = message;
+  feedback.dataset.state = state;
+}
+
+function buildMailtoUrl({ name, email, budget, message }) {
+  const subject = encodeURIComponent(`Projektanfrage von ${name}`);
+  const body = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\nBudget (CHF): ${budget || 'nicht angegeben'}\n\n${message}`
+  );
+  return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+function openMailtoFallback(payload) {
+  window.location.href = buildMailtoUrl(payload);
+}
+
+form?.addEventListener('submit', async (event) => {
   event.preventDefault();
   const data = new FormData(form);
   const name = String(data.get('name') || '').trim();
   const email = String(data.get('email') || '').trim();
   const message = String(data.get('message') || '').trim();
   const budget = String(data.get('budget') || '').trim();
+  const website = String(data.get('website') || '').trim();
+  const submitButton = form.querySelector('.contact-submit');
+  const buttonLabel = submitButton?.textContent || "Let's shoot";
 
   if (!name || !email || !message) {
-    feedback.textContent = 'Bitte Name, Email und Message ausfüllen.';
+    setFormFeedback('Bitte Name, Email und Message ausfüllen.', 'error');
     return;
   }
 
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   if (!validEmail) {
-    feedback.textContent = 'Bitte eine gültige Email-Adresse eingeben.';
+    setFormFeedback('Bitte eine gültige Email-Adresse eingeben.', 'error');
     return;
   }
 
-  const subject = encodeURIComponent(`Projektanfrage von ${name}`);
-  const body = encodeURIComponent(
-    `Name: ${name}\nEmail: ${email}\nBudget (CHF): ${budget || 'nicht angegeben'}\n\n${message}`
-  );
+  submitButton?.setAttribute('disabled', 'true');
+  submitButton?.setAttribute('aria-busy', 'true');
+  if (submitButton) submitButton.textContent = 'Sending...';
+  setFormFeedback('Anfrage wird gesendet ...');
 
-  window.location.href = `mailto:alex@jxl-visuals.com?subject=${subject}&body=${body}`;
-  feedback.textContent = 'Mail-App wird geöffnet. Danke!';
-  form.reset();
+  try {
+    const response = await fetch(CONTACT_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        budget,
+        message,
+        website
+      })
+    });
+    const payload = await response.json().catch(() => null);
+    const success = response.ok && payload?.ok === true;
+
+    if (!success) {
+      throw new Error(payload?.error || payload?.message || 'send_failed');
+    }
+
+    setFormFeedback('Danke! Deine Anfrage wurde gesendet.', 'success');
+    form.reset();
+  } catch (error) {
+    setFormFeedback('Senden fehlgeschlagen. Mail-App wird als Fallback geöffnet.', 'error');
+    openMailtoFallback({ name, email, budget, message });
+  } finally {
+    submitButton?.removeAttribute('disabled');
+    submitButton?.removeAttribute('aria-busy');
+    if (submitButton) submitButton.textContent = buttonLabel;
+  }
 });
 
 async function initThreeExperience() {
