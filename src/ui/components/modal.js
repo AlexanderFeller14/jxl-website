@@ -15,33 +15,32 @@ export function initCaseModal({ items }) {
   const content = modal.querySelector('#case-content');
   const closeButton = modal.querySelector('.modal-close');
 
-  const gallery = (id) => {
+  function shuffle(list) {
+    const arr = [...list];
+    for (let i = arr.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  const gallery = (currentImage) => {
     const mediaPool = items.map((entry) => entry.image).filter(Boolean);
+    const randomized = shuffle(mediaPool.filter((file) => file !== currentImage));
     return Array.from({ length: 6 }, (_, i) => {
-      const file = mediaPool[(id + i - 1) % mediaPool.length];
+      const file = randomized[i % randomized.length] || currentImage;
       return `<li><img src="/media/${file}" alt="Gallery ${i + 1}" loading="lazy" onerror="this.style.opacity='0.2'" /></li>`;
     }).join('');
   };
 
   function render(item) {
     content.innerHTML = `
-      <header class="case-head">
-        <h3>${item.title}</h3>
-        <p>${item.category} · ${item.year}</p>
-      </header>
       <div class="case-hero" role="img" aria-label="Case Hero Placeholder">
         <img src="/media/${item.image}" alt="${item.title}" loading="lazy" onerror="this.style.display='none'" />
         <span>Case Preview</span>
       </div>
-      <ul class="case-facts">
-        <li>Format: 16:9 + 9:16 Deliverables</li>
-        <li>Turnaround: 7 Tage</li>
-        <li>Team: Director + 1st AC + Gaffer</li>
-      </ul>
-      <p class="case-copy">
-        Produktion mit starkem Fokus auf Lichtcharakter, Texturen und präzise Schnittpunkte für Markenkommunikation.
-      </p>
-      <ul class="case-gallery">${gallery(item.id)}</ul>
+      <p class="case-gallery-title">weitere Bilder</p>
+      <ul class="case-gallery">${gallery(item.image)}</ul>
     `;
   }
 

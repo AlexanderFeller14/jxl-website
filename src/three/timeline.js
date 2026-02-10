@@ -37,19 +37,6 @@ const BEATS = {
     materialRoughness: 0.24,
     ambientIntensity: 0.4
   },
-  gear: {
-    cameraPos: [2.46, 1.36, 6.3],
-    target: [0.72, 0.24, 0.0],
-    frameSpread: 1.1,
-    frameDepth: 1.9,
-    frameGridness: 0.55,
-    keyColor: [0.88, 0.93, 0.99],
-    fillColor: [0.4, 0.49, 0.62],
-    rimColor: [0.74, 0.83, 0.95],
-    lensGlow: 0.74,
-    materialRoughness: 0.34,
-    ambientIntensity: 0.31
-  },
   contact: {
     cameraPos: [0.16, 0.67, 5.7],
     target: [0.03, 0.18, 0],
@@ -65,7 +52,7 @@ const BEATS = {
   }
 };
 
-const ORDER = ['home', 'work', 'gear', 'contact'];
+const ORDER = ['home', 'work', 'contact'];
 
 export function createTimelineState(progress) {
   const clamped = Math.min(Math.max(progress, 0), 1);

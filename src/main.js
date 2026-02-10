@@ -2,11 +2,9 @@ import './styles.css';
 
 import { homeSection } from './ui/sections/home.js';
 import { workSection, getWorkItems } from './ui/sections/work.js';
-import { gearSection } from './ui/sections/gear.js';
 import { contactSection } from './ui/sections/contact.js';
 
 import { initMagneticButtons } from './ui/components/button.js';
-import { initWorkFilter } from './ui/components/filter.js';
 import { initCaseModal } from './ui/components/modal.js';
 
 import { createPostFX, createRenderer } from './three/renderer.js';
@@ -27,17 +25,7 @@ app.innerHTML = `
       <nav class="app-launcher" aria-label="Desktop Apps">
         <button class="app-icon is-active magnetic" data-panel="home" aria-label="Open Home">HOME</button>
         <button class="app-icon magnetic" data-panel="work" aria-label="Open Work">WORK</button>
-        <button class="app-icon magnetic" data-panel="gear" aria-label="Open Gear">GEAR</button>
         <button class="app-icon magnetic" data-panel="contact" aria-label="Open Contact">CONTACT</button>
-        <button
-          class="app-icon app-icon-theme magnetic"
-          id="theme-toggle"
-          type="button"
-          aria-label="Switch theme"
-          aria-pressed="false"
-        >
-          LIGHT
-        </button>
       </nav>
 
       <section class="desktop-center" aria-label="Hero Stage">
@@ -65,11 +53,19 @@ app.innerHTML = `
         <section class="window-stack" aria-live="polite">
           ${homeSection()}
           ${workSection()}
-          ${gearSection()}
           ${contactSection()}
         </section>
-
       </section>
+
+      <button
+        class="theme-fab app-icon app-icon-theme magnetic"
+        id="theme-toggle"
+        type="button"
+        aria-label="Switch theme"
+        aria-pressed="false"
+      >
+        LIGHT
+      </button>
     </div>
   </main>
 `;
@@ -141,13 +137,74 @@ lockSpotifyThemeDark();
 
 initMagneticButtons(document);
 
-initWorkFilter({
-  mount: document.querySelector('#work-filter'),
-  grid: document.querySelector('#work-grid')
-});
-
 const modal = initCaseModal({ items: workItems });
 const grid = document.querySelector('#work-grid');
+const viewport = document.querySelector('#work-viewport');
+const prevBtn = document.querySelector('#work-prev');
+const nextBtn = document.querySelector('#work-next');
+const counter = document.querySelector('#work-counter');
+const slides = Array.from(grid?.querySelectorAll('.work-slide') || []);
+
+function getActiveSlideIndex() {
+  if (!viewport || slides.length === 0) return 0;
+  const center = viewport.scrollLeft + viewport.clientWidth * 0.5;
+  let bestIndex = 0;
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  slides.forEach((slide, index) => {
+    const slideCenter = slide.offsetLeft + slide.clientWidth * 0.5;
+    const distance = Math.abs(slideCenter - center);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+  });
+
+  return bestIndex;
+}
+
+function updateWorkCounter() {
+  if (!counter || slides.length === 0) return;
+  counter.textContent = `${getActiveSlideIndex() + 1} / ${slides.length}`;
+}
+
+function scrollToSlide(index) {
+  if (!viewport || slides.length === 0) return;
+  const clamped = Math.max(0, Math.min(index, slides.length - 1));
+  const slide = slides[clamped];
+  viewport.scrollTo({
+    left: slide.offsetLeft,
+    behavior: 'smooth'
+  });
+}
+
+if (viewport && slides.length > 0) {
+  let scrollTick = 0;
+  viewport.addEventListener('scroll', () => {
+    if (scrollTick) cancelAnimationFrame(scrollTick);
+    scrollTick = requestAnimationFrame(updateWorkCounter);
+  });
+  updateWorkCounter();
+}
+
+prevBtn?.addEventListener('click', () => {
+  scrollToSlide(getActiveSlideIndex() - 1);
+});
+
+nextBtn?.addEventListener('click', () => {
+  scrollToSlide(getActiveSlideIndex() + 1);
+});
+
+viewport?.addEventListener('keydown', (event) => {
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    scrollToSlide(getActiveSlideIndex() - 1);
+  }
+  if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    scrollToSlide(getActiveSlideIndex() + 1);
+  }
+});
 
 grid.addEventListener('click', (event) => {
   const card = event.target.closest('.work-item');
@@ -192,7 +249,7 @@ form.addEventListener('submit', (event) => {
     `Name: ${name}\nEmail: ${email}\nBudget: ${budget || 'n/a'}\n\n${message}`
   );
 
-  window.location.href = `mailto:hello@jxl-visuals.com?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:alex@jxl-visuals.com?subject=${subject}&body=${body}`;
   feedback.textContent = 'Mail-App wird geöffnet. Danke!';
   form.reset();
 });
@@ -213,7 +270,6 @@ async function initThreeExperience() {
   const panelToProgress = {
     home: 0.06,
     work: 0.36,
-    gear: 0.68,
     contact: 0.95
   };
 

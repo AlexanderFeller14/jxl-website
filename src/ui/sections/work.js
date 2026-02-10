@@ -10,21 +10,42 @@ const MEDIA_FILES = [
   'CK1A8005.JPG',
   'CK1A8575-Enhanced-NR.JPG',
   'CK1A8986.JPG',
-  'CK1A9013.JPG'
+  'CK1A9013.JPG',
+  'CK1A9107.JPG',
+  'CK1A9131.JPG',
+  'CK1A9960.JPG'
 ];
 
-const WORK_ITEMS = [
-  { id: 1, title: 'Velocity Noir', category: 'Automotive', year: 2025, image: MEDIA_FILES[0] },
-  { id: 2, title: 'Cold Engine', category: 'Automotive', year: 2024, image: MEDIA_FILES[1] },
-  { id: 3, title: 'Launch Sequence', category: 'Commercial', year: 2025, image: MEDIA_FILES[2] },
-  { id: 4, title: 'Urban Pulse', category: 'Commercial', year: 2023, image: MEDIA_FILES[3] },
-  { id: 5, title: 'Night Protocol', category: 'Events', year: 2024, image: MEDIA_FILES[4] },
-  { id: 6, title: 'Main Stage Arc', category: 'Events', year: 2023, image: MEDIA_FILES[5] },
-  { id: 7, title: '48h Campaign', category: 'Social', year: 2025, image: MEDIA_FILES[6] },
-  { id: 8, title: 'City Sprint', category: 'Social', year: 2024, image: MEDIA_FILES[7] },
-  { id: 9, title: 'Drive Unit', category: 'Automotive', year: 2023, image: MEDIA_FILES[8] },
-  { id: 10, title: 'Brand Texture', category: 'Commercial', year: 2022, image: MEDIA_FILES[9] }
-];
+const CATEGORIES = ['Automotive', 'Commercial', 'Events', 'Social'];
+const BASE_YEAR = 2026;
+const FEATURED_IMAGE = 'CK1A8005.JPG';
+
+function shuffle(list) {
+  const arr = [...list];
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function createTitleFromFileName(fileName) {
+  return fileName
+    .replace(/\.[^/.]+$/, '')
+    .replace(/[-_]+/g, ' ')
+    .trim();
+}
+
+const SHUFFLED_MEDIA_FILES = shuffle(MEDIA_FILES.filter((file) => file !== FEATURED_IMAGE));
+const ORDERED_MEDIA_FILES = [FEATURED_IMAGE, ...SHUFFLED_MEDIA_FILES];
+
+const WORK_ITEMS = ORDERED_MEDIA_FILES.map((image, index) => ({
+  id: index + 1,
+  title: createTitleFromFileName(image),
+  category: CATEGORIES[index % CATEGORIES.length],
+  year: BASE_YEAR - (index % 4),
+  image
+}));
 
 export function getWorkItems() {
   return WORK_ITEMS;
@@ -37,22 +58,17 @@ export function getMediaFiles() {
 export function workSection() {
   const cards = WORK_ITEMS.map((item) => {
     return `
-      <article
-        class="work-item"
+      <button
+        type="button"
+        class="work-item work-slide"
         data-id="${item.id}"
         data-category="${item.category}"
         data-index="${item.id - 1}"
         data-image="${item.image}"
-        tabindex="0"
-        role="button"
         aria-label="Case öffnen: ${item.title}"
       >
         <div class="work-thumb" data-image="${item.image}" style="background-image:url('/media/${item.image}')"></div>
-        <div class="work-caption">
-          <h3>${item.title}</h3>
-          <p>${item.category} · ${item.year}</p>
-        </div>
-      </article>
+      </button>
     `;
   }).join('');
 
@@ -61,13 +77,19 @@ export function workSection() {
       <header class="window-head">
         <span>Work</span>
       </header>
-      <div class="window-body">
-        <div class="section-head">
-          <p class="eyebrow">Selected Cases</p>
+      <div class="window-body work-body">
+        <div class="work-head">
+          <p class="eyebrow">Portfolio</p>
           <h2 id="work-title">Work</h2>
         </div>
-        <div class="work-filter-wrap" id="work-filter" aria-label="Work Filter"></div>
-        <div class="work-grid" id="work-grid">${cards}</div>
+        <div class="work-carousel" aria-label="Portfolio Carousel">
+          <button class="work-carousel-nav magnetic" id="work-prev" type="button" aria-label="Vorheriges Bild">‹</button>
+          <div class="work-carousel-viewport" id="work-viewport" tabindex="0" aria-label="Work Bilder">
+            <div class="work-grid work-carousel-track" id="work-grid">${cards}</div>
+          </div>
+          <button class="work-carousel-nav magnetic" id="work-next" type="button" aria-label="Nächstes Bild">›</button>
+        </div>
+        <p class="work-counter" id="work-counter">1 / ${WORK_ITEMS.length}</p>
       </div>
     </article>
   `;

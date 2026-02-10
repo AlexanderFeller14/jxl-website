@@ -20,6 +20,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const BASE_Y_ROTATION = Math.PI / 2;
 const BASE_X_ROTATION = -0.12;
+const CAR_VERTICAL_OFFSET = 0.14;
 const SCENE_BG_DARK = '#020409';
 const SCENE_BG_LIGHT = '#e3ecf8';
 
@@ -131,7 +132,7 @@ function createFallbackCar(materialRegistry) {
   car.add(shell, cabin, wing, wheelFL, wheelFR, wheelRL, wheelRR);
   car.rotation.y = BASE_Y_ROTATION;
   car.rotation.x = BASE_X_ROTATION;
-  car.position.set(0, 0.02, 0);
+  car.position.set(0, 0.02 + CAR_VERTICAL_OFFSET, 0);
 
   car.traverse((node) => {
     if (!node.isMesh) return;
@@ -170,7 +171,7 @@ function normalizeCarModel(model, materialRegistry) {
   const scale = 4.7 / longest;
   root.scale.setScalar(scale);
 
-  root.position.set(0, 0.06, 0);
+  root.position.set(0, 0.06 + CAR_VERTICAL_OFFSET, 0);
   root.rotation.y = BASE_Y_ROTATION;
   root.rotation.x = BASE_X_ROTATION;
 
