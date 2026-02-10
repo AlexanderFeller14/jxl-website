@@ -1640,9 +1640,30 @@ h3 {
     padding-top: 14px;
   }
 
+  #panel-work.desktop-window.is-active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #panel-work .window-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #panel-work .work-carousel {
+    margin: 0 0 0.55rem;
+  }
+
   .work-carousel {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .work-carousel-viewport {
+    scroll-padding-inline: 0;
   }
 
   .work-carousel-nav {
@@ -1650,8 +1671,8 @@ h3 {
   }
 
   .work-slide {
-    flex: 0 0 min(92vw, 760px);
-    min-width: min(92vw, 760px);
+    flex: 0 0 100%;
+    min-width: 100%;
   }
 
   .work-thumb {
@@ -1798,8 +1819,8 @@ h3 {
   }
 
   .work-slide {
-    flex: 0 0 92%;
-    min-width: 92%;
+    flex: 0 0 100%;
+    min-width: 100%;
   }
 
   .work-thumb {
