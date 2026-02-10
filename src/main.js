@@ -22,9 +22,18 @@ app.innerHTML = `
   <main class="desktop" aria-label="Interactive Desktop Portfolio">
     <div class="desktop-shell">
       <nav class="app-launcher" aria-label="Desktop Apps">
-        <button class="app-icon is-active magnetic" data-panel="home" aria-label="Open Home">HOME</button>
-        <button class="app-icon magnetic" data-panel="work" aria-label="Open Work">WORK</button>
+        <button class="app-icon magnetic" data-panel="home" aria-label="Open Home">HOME</button>
+        <button class="app-icon is-active magnetic" data-panel="work" aria-label="Open Work">WORK</button>
         <button class="app-icon magnetic" data-panel="contact" aria-label="Open Contact">CONTACT</button>
+        <button
+          class="app-icon app-icon-theme nav-theme-toggle magnetic"
+          data-theme-toggle
+          type="button"
+          aria-label="Switch theme"
+          aria-pressed="false"
+        >
+          LIGHT
+        </button>
       </nav>
 
       <section class="desktop-center" aria-label="Hero Stage">
@@ -83,7 +92,7 @@ app.innerHTML = `
 
       <button
         class="theme-fab app-icon app-icon-theme magnetic"
-        id="theme-toggle"
+        data-theme-toggle
         type="button"
         aria-label="Switch theme"
         aria-pressed="false"
@@ -117,8 +126,8 @@ function applyTheme(theme) {
   const next = theme === 'light' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
 
-  const toggle = document.querySelector('#theme-toggle');
-  if (toggle) {
+  const toggles = document.querySelectorAll('[data-theme-toggle]');
+  toggles.forEach((toggle) => {
     const isLight = next === 'light';
     toggle.textContent = isLight ? 'DARK' : 'LIGHT';
     toggle.setAttribute('aria-pressed', String(isLight));
@@ -126,21 +135,23 @@ function applyTheme(theme) {
       'aria-label',
       isLight ? 'Switch to dark mode' : 'Switch to light mode'
     );
-  }
+  });
   window.dispatchEvent(new CustomEvent('app-theme-change', { detail: { theme: next } }));
 }
 
 function initThemeToggle() {
-  const toggle = document.querySelector('#theme-toggle');
-  if (!toggle) return;
+  const toggles = document.querySelectorAll('[data-theme-toggle]');
+  if (!toggles.length) return;
 
   let theme = getPreferredTheme();
   applyTheme(theme);
 
-  toggle.addEventListener('click', () => {
-    theme = theme === 'dark' ? 'light' : 'dark';
-    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
-    applyTheme(theme);
+  toggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+      applyTheme(theme);
+    });
   });
 
   const colorSchemeMedia = window.matchMedia('(prefers-color-scheme: light)');
@@ -168,6 +179,8 @@ const prevBtn = document.querySelector('#work-prev');
 const nextBtn = document.querySelector('#work-next');
 const counter = document.querySelector('#work-counter');
 const slides = Array.from(grid?.querySelectorAll('.work-slide') || []);
+const thumbsTrack = document.querySelector('#work-thumbs');
+const thumbButtons = Array.from(thumbsTrack?.querySelectorAll('.work-thumb-chip') || []);
 
 function getActiveSlideIndex() {
   if (!viewport || slides.length === 0) return 0;
@@ -187,15 +200,39 @@ function getActiveSlideIndex() {
   return bestIndex;
 }
 
-function updateWorkCounter() {
+function setActiveWorkThumb(index) {
+  if (thumbButtons.length === 0) return;
+  thumbButtons.forEach((button, buttonIndex) => {
+    const isActive = buttonIndex === index;
+    button.classList.toggle('is-active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+    if (isActive) {
+      button.setAttribute('aria-current', 'true');
+    } else {
+      button.removeAttribute('aria-current');
+    }
+  });
+
+  const active = thumbButtons[index];
+  active?.scrollIntoView({
+    block: 'nearest',
+    inline: 'center',
+    behavior: 'smooth'
+  });
+}
+
+function updateWorkUI() {
   if (!counter || slides.length === 0) return;
-  counter.textContent = `${getActiveSlideIndex() + 1} / ${slides.length}`;
+  const activeIndex = getActiveSlideIndex();
+  counter.textContent = `${activeIndex + 1} / ${slides.length}`;
+  setActiveWorkThumb(activeIndex);
 }
 
 function scrollToSlide(index) {
   if (!viewport || slides.length === 0) return;
   const clamped = Math.max(0, Math.min(index, slides.length - 1));
   const slide = slides[clamped];
+  setActiveWorkThumb(clamped);
   viewport.scrollTo({
     left: slide.offsetLeft,
     behavior: 'smooth'
@@ -206,9 +243,9 @@ if (viewport && slides.length > 0) {
   let scrollTick = 0;
   viewport.addEventListener('scroll', () => {
     if (scrollTick) cancelAnimationFrame(scrollTick);
-    scrollTick = requestAnimationFrame(updateWorkCounter);
+    scrollTick = requestAnimationFrame(updateWorkUI);
   });
-  updateWorkCounter();
+  updateWorkUI();
 }
 
 prevBtn?.addEventListener('click', () => {
@@ -228,6 +265,14 @@ viewport?.addEventListener('keydown', (event) => {
     event.preventDefault();
     scrollToSlide(getActiveSlideIndex() + 1);
   }
+});
+
+thumbsTrack?.addEventListener('click', (event) => {
+  const thumb = event.target.closest('.work-thumb-chip');
+  if (!thumb) return;
+  const index = Number(thumb.dataset.workThumbIndex);
+  if (Number.isNaN(index)) return;
+  scrollToSlide(index);
 });
 
 grid.addEventListener('click', (event) => {
@@ -270,7 +315,7 @@ form.addEventListener('submit', (event) => {
 
   const subject = encodeURIComponent(`Projektanfrage von ${name}`);
   const body = encodeURIComponent(
-    `Name: ${name}\nEmail: ${email}\nBudget: ${budget || 'n/a'}\n\n${message}`
+    `Name: ${name}\nEmail: ${email}\nBudget (CHF): ${budget || 'nicht angegeben'}\n\n${message}`
   );
 
   window.location.href = `mailto:alex@jxl-visuals.com?subject=${subject}&body=${body}`;
@@ -285,11 +330,15 @@ async function initThreeExperience() {
   const renderer = createRenderer(canvas, perf);
   const world = await createPortfolioScene({ renderer, perf });
   const postFX = createPostFX({ renderer, scene: world.scene, camera: world.camera, perf });
+  const mobileViewportMedia = window.matchMedia(
+    '(max-width: 1100px), (hover: none) and (pointer: coarse)'
+  );
 
   let running = !document.hidden;
   let raf = 0;
   let progressCurrent = 0.06;
   let progressTarget = 0.06;
+  let isMobileViewport = mobileViewportMedia.matches;
 
   const panelToProgress = {
     home: 0.06,
@@ -300,6 +349,8 @@ async function initThreeExperience() {
   const panels = document.querySelectorAll('.desktop-window');
   const appIcons = document.querySelectorAll('.app-icon[data-panel]');
   const heroCta = document.querySelector('#hero-cta');
+  const desktopCenter = document.querySelector('.desktop-center');
+  const windowStack = document.querySelector('.window-stack');
 
   function syncThreeTheme(theme) {
     const next = theme === 'light' ? 'light' : 'dark';
@@ -320,13 +371,37 @@ async function initThreeExperience() {
     raf = requestAnimationFrame(frameLoop);
   }
 
+  function syncMobileViewportClass() {
+    document.documentElement.classList.toggle('is-mobile-ui', isMobileViewport);
+  }
+  syncMobileViewportClass();
+
+  const onMobileViewportChange = (event) => {
+    isMobileViewport = event.matches;
+    syncMobileViewportClass();
+    requestRender();
+  };
+  mobileViewportMedia.addEventListener?.('change', onMobileViewportChange);
+
   function setActivePanel(panelId) {
+    document.documentElement.setAttribute('data-active-panel', panelId);
     panels.forEach((panel) => panel.classList.toggle('is-active', panel.id === `panel-${panelId}`));
     appIcons.forEach((icon) => {
       icon.classList.toggle('is-active', icon.dataset.panel === panelId);
     });
     heroCta?.classList.toggle('is-visible', panelId === 'home');
     progressTarget = panelToProgress[panelId] ?? 0.06;
+
+    requestAnimationFrame(() => {
+      desktopCenter?.scrollTo(0, 0);
+      windowStack?.scrollTo(0, 0);
+      panels.forEach((panel) => {
+        panel.scrollTop = 0;
+        panel.scrollLeft = 0;
+      });
+      window.scrollTo(0, 0);
+    });
+
     requestRender();
   }
 
@@ -338,12 +413,15 @@ async function initThreeExperience() {
     button.addEventListener('click', () => setActivePanel(button.dataset.openPanel));
   });
 
+  // Start on home so the landing state is the hero scene.
+  setActivePanel('home');
+
   let lastTime = performance.now();
 
   function renderFrame(timeMs = performance.now()) {
     const pointerState = pointer.update(0.16);
     progressCurrent += (progressTarget - progressCurrent) * 0.12;
-    const state = createTimelineState(progressCurrent);
+    const state = createTimelineState(progressCurrent, { mobile: isMobileViewport });
     world.update(state, pointerState, timeMs * 0.001);
 
     const delta = Math.min((timeMs - lastTime) * 0.001, 0.05);
@@ -460,6 +538,7 @@ async function initThreeExperience() {
     canvas.removeEventListener('pointercancel', onDragEnd);
     window.removeEventListener('pointermove', onPointerWake);
     window.removeEventListener('touchmove', onPointerWake);
+    mobileViewportMedia.removeEventListener?.('change', onMobileViewportChange);
     world.dispose();
     postFX?.dispose();
     renderer.dispose();

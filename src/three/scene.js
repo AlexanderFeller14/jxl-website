@@ -20,6 +20,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const BASE_Y_ROTATION = Math.PI / 2;
 const BASE_X_ROTATION = -0.12;
+const MOBILE_BASE_Y_ROTATION = Math.PI - 0.36;
+const MOBILE_BASE_X_ROTATION = -0.08;
 const CAR_VERTICAL_OFFSET = 0.14;
 const SCENE_BG_DARK = '#020409';
 const SCENE_BG_LIGHT = '#e3ecf8';
@@ -255,6 +257,14 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
     velocityYaw: 0,
     velocityPitch: 0
   };
+  const mobileViewportMedia = window.matchMedia(
+    '(max-width: 1100px), (hover: none) and (pointer: coarse)'
+  );
+  let isMobileViewport = mobileViewportMedia.matches;
+  const onMobileViewportMediaChange = (event) => {
+    isMobileViewport = event.matches;
+  };
+  mobileViewportMedia.addEventListener?.('change', onMobileViewportMediaChange);
 
   const baseCarY = carRig.position.y;
   const motionStrength = perf?.reducedMotion ? 0 : 1;
@@ -296,8 +306,9 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
     drag.lastX = x;
     drag.lastY = y;
 
-    const yawDelta = (dx / Math.max(window.innerWidth, 1)) * 4.4;
-    const pitchDelta = (dy / Math.max(window.innerHeight, 1)) * 2.9;
+    const dragSensitivity = isMobileViewport ? 0.72 : 1;
+    const yawDelta = (dx / Math.max(window.innerWidth, 1)) * 4.4 * dragSensitivity;
+    const pitchDelta = (dy / Math.max(window.innerHeight, 1)) * 2.9 * dragSensitivity;
 
     drag.yaw += yawDelta;
     drag.pitch = MathUtils.clamp(drag.pitch + pitchDelta, -0.38, 0.38);
@@ -318,6 +329,7 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
   }
 
   function resize() {
+    isMobileViewport = mobileViewportMedia.matches;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
   }
@@ -325,9 +337,13 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
   function update(state, pointer, elapsed = 0) {
     hover.glow = MathUtils.lerp(hover.glow, hover.highlighted >= 0 ? 1 : 0, 0.12);
 
-    const px = MathUtils.clamp(pointer.x, -0.38, 0.38);
-    const py = MathUtils.clamp(pointer.y, -0.34, 0.34);
-    const parallaxWeight = drag.active ? 0.16 : 1;
+    const viewportMotionScale = isMobileViewport ? 0.58 : 1;
+    const baseYaw = isMobileViewport ? MOBILE_BASE_Y_ROTATION : BASE_Y_ROTATION;
+    const basePitch = isMobileViewport ? MOBILE_BASE_X_ROTATION : BASE_X_ROTATION;
+    const px = MathUtils.clamp(pointer.x, -0.38, 0.38) * viewportMotionScale;
+    const py = MathUtils.clamp(pointer.y, -0.34, 0.34) * viewportMotionScale;
+    const parallaxWeight = (drag.active ? 0.16 : 1) * (isMobileViewport ? 0.72 : 1);
+    const floatScale = isMobileViewport ? 0.58 : 1;
 
     const floatA = Math.sin(elapsed * 0.52);
     const floatB = Math.cos(elapsed * 0.36);
@@ -341,17 +357,23 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
 
     carRig.rotation.y = MathUtils.lerp(
       carRig.rotation.y,
-      BASE_Y_ROTATION + drag.yaw + px * 0.11 * parallaxWeight + floatB * 0.016 * motionStrength,
+      baseYaw +
+        drag.yaw +
+        px * 0.11 * parallaxWeight +
+        floatB * 0.016 * motionStrength * floatScale,
       0.058
     );
     carRig.rotation.x = MathUtils.lerp(
       carRig.rotation.x,
-      BASE_X_ROTATION + drag.pitch + py * 0.034 * parallaxWeight + floatA * 0.009 * motionStrength,
+      basePitch +
+        drag.pitch +
+        py * 0.034 * parallaxWeight +
+        floatA * 0.009 * motionStrength * floatScale,
       0.054
     );
     carRig.position.y = MathUtils.lerp(
       carRig.position.y,
-      baseCarY + floatA * 0.1 * motionStrength,
+      baseCarY + floatA * 0.1 * motionStrength * floatScale,
       0.05
     );
 
@@ -422,6 +444,7 @@ export async function createPortfolioScene({ renderer, perf } = {}) {
     endDrag,
     isDragging,
     dispose() {
+      mobileViewportMedia.removeEventListener?.('change', onMobileViewportMediaChange);
       root.traverse((node) => {
         if (node.isMesh) {
           node.geometry?.dispose();

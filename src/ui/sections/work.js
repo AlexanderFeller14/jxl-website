@@ -72,6 +72,21 @@ export function workSection() {
     `;
   }).join('');
 
+  const thumbs = WORK_ITEMS.map((item, index) => {
+    const isActive = index === 0;
+    return `
+      <button
+        type="button"
+        class="work-thumb-chip magnetic${isActive ? ' is-active' : ''}"
+        data-work-thumb-index="${index}"
+        aria-label="Bild ${index + 1} anzeigen"
+        aria-pressed="${isActive ? 'true' : 'false'}"
+      >
+        <img src="/media/${item.image}" alt="" loading="lazy" decoding="async" />
+      </button>
+    `;
+  }).join('');
+
   return `
     <article class="desktop-window" id="panel-work" role="region" aria-labelledby="work-title">
       <header class="window-head">
@@ -88,6 +103,9 @@ export function workSection() {
             <div class="work-grid work-carousel-track" id="work-grid">${cards}</div>
           </div>
           <button class="work-carousel-nav magnetic" id="work-next" type="button" aria-label="Nächstes Bild">›</button>
+        </div>
+        <div class="work-thumbs-wrap" aria-label="Thumbnail Vorschau">
+          <div class="work-thumbs" id="work-thumbs">${thumbs}</div>
         </div>
         <p class="work-counter" id="work-counter">1 / ${WORK_ITEMS.length}</p>
       </div>

@@ -43,7 +43,7 @@ export function contactSection() {
           </div>
           <label>
             Budget (optional)
-            <input type="text" name="budget" placeholder="z.B. 2.000 - 5.000 EUR" />
+            <input type="text" name="budget" placeholder="z.B. CHF 2'000 - 5'000" />
           </label>
           <label class="contact-message-field">
             Message

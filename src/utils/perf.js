@@ -5,9 +5,10 @@ export function detectPerfProfile() {
   const hardware = navigator.hardwareConcurrency || 4;
   const memory = navigator.deviceMemory || 4;
   const ua = navigator.userAgent.toLowerCase();
+  const narrowViewport = window.matchMedia('(max-width: 900px)').matches;
 
   const lowEndFromUA = LOW_END_GPU_HINTS.some((hint) => ua.includes(hint));
-  const isLowEnd = lowEndFromUA || hardware <= 4 || memory <= 4;
+  const isLowEnd = lowEndFromUA || hardware <= 4 || memory <= 4 || narrowViewport;
 
   return {
     reducedMotion,

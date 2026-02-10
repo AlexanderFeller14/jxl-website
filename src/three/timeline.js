@@ -52,16 +52,59 @@ const BEATS = {
   }
 };
 
+const MOBILE_BEATS = {
+  home: {
+    cameraPos: [0.02, 0.96, 4.82],
+    target: [0.01, 0.24, 0.03],
+    frameSpread: 2.2,
+    frameDepth: 4.6,
+    frameGridness: 0.08,
+    keyColor: [0.97, 0.99, 1.0],
+    fillColor: [0.56, 0.67, 0.8],
+    rimColor: [0.92, 0.3, 0.34],
+    lensGlow: 1.22,
+    materialRoughness: 0.16,
+    ambientIntensity: 0.46
+  },
+  work: {
+    cameraPos: [0.04, 1.05, 5.52],
+    target: [0.02, 0.22, 0.02],
+    frameSpread: 1.4,
+    frameDepth: 1.2,
+    frameGridness: 0.86,
+    keyColor: [0.95, 0.95, 0.95],
+    fillColor: [0.46, 0.5, 0.57],
+    rimColor: [0.86, 0.2, 0.24],
+    lensGlow: 0.9,
+    materialRoughness: 0.24,
+    ambientIntensity: 0.4
+  },
+  contact: {
+    cameraPos: [0.02, 0.84, 5.12],
+    target: [0.0, 0.2, 0.02],
+    frameSpread: 0.95,
+    frameDepth: 0.5,
+    frameGridness: 0.7,
+    keyColor: [0.99, 0.9, 0.84],
+    fillColor: [0.49, 0.43, 0.42],
+    rimColor: [0.9, 0.35, 0.3],
+    lensGlow: 0.68,
+    materialRoughness: 0.28,
+    ambientIntensity: 0.42
+  }
+};
+
 const ORDER = ['home', 'work', 'contact'];
 
-export function createTimelineState(progress) {
+export function createTimelineState(progress, options = {}) {
+  const beats = options.mobile ? MOBILE_BEATS : BEATS;
   const clamped = Math.min(Math.max(progress, 0), 1);
   const scaled = clamped * (ORDER.length - 1);
   const fromIndex = Math.floor(scaled);
   const toIndex = Math.min(fromIndex + 1, ORDER.length - 1);
 
-  const from = BEATS[ORDER[fromIndex]];
-  const to = BEATS[ORDER[toIndex]];
+  const from = beats[ORDER[fromIndex]];
+  const to = beats[ORDER[toIndex]];
   const t = smoothstep(scaled - fromIndex);
 
   return {
