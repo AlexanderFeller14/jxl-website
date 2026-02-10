@@ -128,7 +128,7 @@ textarea {
     0 32px 96px rgba(0, 0, 0, 0.42),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 1fr;
   overflow: hidden;
 }
 
@@ -141,15 +141,23 @@ textarea {
 }
 
 .app-launcher {
-  position: relative;
-  z-index: 4;
-  border-bottom: 1px solid var(--line-soft);
-  padding: 11px 14px;
-  display: grid;
-  grid-template-columns: minmax(160px, 1fr) repeat(5, auto);
-  gap: 9px;
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 12;
+  padding: 8px 10px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
   align-items: center;
-  background: linear-gradient(180deg, rgba(9, 13, 19, 0.66), rgba(9, 13, 19, 0.4));
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(9, 13, 19, 0.72), rgba(9, 13, 19, 0.5));
+  backdrop-filter: blur(12px) saturate(1.1);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.4);
+  max-width: calc(100% - 24px);
 }
 
 .launcher-brand-wrap {
@@ -322,7 +330,7 @@ textarea {
 .hero-cta-floating {
   position: absolute;
   left: 50%;
-  bottom: clamp(16px, 5.2vh, 52px);
+  bottom: clamp(84px, 13vh, 132px);
   transform: translateX(-50%);
   z-index: 7;
   display: none;
@@ -430,6 +438,38 @@ textarea {
   width: 2px;
   background: linear-gradient(180deg, var(--accent), var(--accent-warm));
   opacity: 0.8;
+}
+
+.home-title-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+
+.home-title-logo {
+  display: block;
+  width: auto;
+  height: clamp(24px, 3vw, 34px);
+  max-width: min(260px, 72%);
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.home-title-logo.is-hidden {
+  display: none;
+}
+
+.home-title-logo-fallback {
+  display: none;
+  font-family: 'Syne', 'Instrument Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  font-size: clamp(1.24rem, 2vw, 1.94rem);
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.home-title-logo-fallback.is-visible {
+  display: inline-block;
 }
 
 .home-topline {
@@ -912,7 +952,9 @@ h3 {
 }
 
 :root[data-theme='light'] .app-launcher {
+  border-color: rgba(19, 45, 81, 0.16);
   background: linear-gradient(180deg, rgba(248, 252, 255, 0.88), rgba(240, 246, 255, 0.74));
+  box-shadow: 0 14px 30px rgba(47, 82, 143, 0.16);
 }
 
 :root[data-theme='light'] .launcher-brand-wrap {
@@ -1004,6 +1046,10 @@ h3 {
 :root[data-theme='light'] .home-2026 {
   border-color: rgba(21, 47, 84, 0.16);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(241, 248, 255, 0.58));
+}
+
+:root[data-theme='light'] .home-title-logo {
+  filter: none;
 }
 
 :root[data-theme='light'] .home-corner-logo {
@@ -1149,8 +1195,12 @@ h3 {
   }
 
   .app-launcher {
-    grid-template-columns: 1fr;
-    justify-items: start;
+    left: 10px;
+    right: 10px;
+    transform: none;
+    bottom: 10px;
+    justify-content: flex-start;
+    border-radius: 16px;
   }
 
   .window-stack {
@@ -1199,7 +1249,7 @@ h3 {
   .hero-cta-floating {
     position: static;
     transform: none;
-    margin: 0 10px 10px;
+    margin: 0 10px 84px;
     align-self: center;
   }
 

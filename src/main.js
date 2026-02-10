@@ -25,17 +25,6 @@ app.innerHTML = `
   <main class="desktop" aria-label="Interactive Desktop Portfolio">
     <div class="desktop-shell">
       <nav class="app-launcher" aria-label="Desktop Apps">
-        <div class="launcher-brand-wrap" aria-label="JXL Visuals Home">
-          <img
-            class="brand-logo-img"
-            src="/media/logo-jxl.png"
-            alt="JXL Logo"
-            loading="eager"
-            decoding="async"
-            onerror="this.classList.add('is-hidden')"
-          />
-          <span class="launcher-brand-fallback">jxl-visuals</span>
-        </div>
         <button class="app-icon is-active magnetic" data-panel="home" aria-label="Open Home">HOME</button>
         <button class="app-icon magnetic" data-panel="work" aria-label="Open Work">WORK</button>
         <button class="app-icon magnetic" data-panel="gear" aria-label="Open Gear">GEAR</button>
@@ -80,12 +69,6 @@ app.innerHTML = `
           ${contactSection()}
         </section>
 
-        <div class="hero-cta-floating is-visible" id="hero-cta" role="group" aria-label="Hauptaktionen">
-          <div class="hero-cta-row">
-            <button class="btn magnetic" type="button" data-open-panel="work">Work ansehen</button>
-            <button class="btn btn-ghost magnetic" type="button" data-open-panel="contact">Kontakt</button>
-          </div>
-        </div>
       </section>
     </div>
   </main>

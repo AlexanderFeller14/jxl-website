@@ -4,7 +4,17 @@ export function homeSection() {
       <div class="window-body home-body">
         <section class="home-2026" aria-label="Hero Widget">
           <h1 id="home-title" class="visually-hidden">jxl-visuals</h1>
-          <h2>JXL Visuals</h2>
+          <div class="home-title-logo-wrap">
+            <img
+              class="home-title-logo"
+              src="/media/logo-jxl.png"
+              alt="JXL Visuals"
+              loading="eager"
+              decoding="async"
+              onerror="this.classList.add('is-hidden'); this.nextElementSibling.classList.add('is-visible')"
+            />
+            <span class="home-title-logo-fallback">JXL Visuals</span>
+          </div>
           <p class="lede">Cinematic Photo &amp; Film mit Fokus auf Automotive, Commercial und schnelle Social Deliverables.</p>
 
           <div class="home-tags" aria-label="Leistungsbereiche">
