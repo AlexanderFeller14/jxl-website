@@ -6,6 +6,15 @@ const MEDIA_FILES = [
   'CK1A2347.JPG',
   'CK1A2429.JPG',
   'CK1A2572.JPG',
+  'CK1A4624 2.JPG',
+  'CK1A5161 2.JPG',
+  'CK1A6184-2 2.JPG',
+  'CK1A6585.JPG',
+  'CK1A6916 2.JPG',
+  'CK1A6968.JPG',
+  'CK1A7012.JPG',
+  'CK1A7138.JPG',
+  'CK1A7249.JPG',
   'CK1A7967.JPG',
   'CK1A8005.JPG',
   'CK1A8575-Enhanced-NR.JPG',
@@ -13,7 +22,9 @@ const MEDIA_FILES = [
   'CK1A9013.JPG',
   'CK1A9107.JPG',
   'CK1A9131.JPG',
-  'CK1A9960.JPG'
+  'CK1A9960.JPG',
+  '_MG_9897.JPG',
+  '_MG_9944.JPG'
 ];
 
 const CATEGORIES = ['Automotive', 'Commercial', 'Events', 'Social'];
