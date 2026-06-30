@@ -38,7 +38,7 @@ export function Hero() {
         // The panning shot is wide; on a tall phone the default centre crop
         // pushes the car left. Bias the crop so the Porsche sits centred on
         // mobile, returning to a true centre from md up.
-        className="object-cover object-[46%_50%] md:object-center"
+        className="object-cover object-[48%_50%] md:object-center"
       />
 
       {/* Soft scrim keeps the centre (the car) clear, type legible top & bottom */}
