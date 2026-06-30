@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/cn";
+import { ThemeToggle } from "./ThemeToggle";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -65,8 +66,9 @@ export function Nav() {
       <nav className="mx-auto flex h-[72px] w-full max-w-[1680px] items-center justify-between px-6 md:px-10 lg:px-16 xl:px-20">
         <Wordmark />
 
-        {/* Desktop nav */}
-        <ul className="hidden items-center gap-9 md:flex">
+        <div className="flex items-center gap-1 md:gap-7">
+          {/* Desktop nav */}
+          <ul className="hidden items-center gap-9 md:flex">
           {site.nav.map((item) => {
             const active = isActive(pathname, item.href);
             return (
@@ -91,12 +93,14 @@ export function Nav() {
               </li>
             );
           })}
-        </ul>
+          </ul>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          aria-label={open ? "Close menu" : "Open menu"}
+          <ThemeToggle />
+
+          {/* Mobile menu button */}
+          <button
+            type="button"
+            aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
           className="relative z-50 flex h-10 w-10 items-center justify-center md:hidden"
@@ -116,7 +120,8 @@ export function Nav() {
               )}
             />
           </div>
-        </button>
+          </button>
+        </div>
       </nav>
 
       {/* Mobile overlay menu */}

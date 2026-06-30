@@ -26,23 +26,24 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // Theme-aware: values come from CSS variables (see globals.css).
         bg: {
-          base: "#0A0A0B",
-          raised: "#111113",
-          sunken: "#070708",
+          base: "rgb(var(--bg-base) / <alpha-value>)",
+          raised: "rgb(var(--bg-raised) / <alpha-value>)",
+          sunken: "rgb(var(--bg-sunken) / <alpha-value>)",
         },
         ink: {
-          primary: "#F2F1EE",
-          muted: "#8A8A8F",
-          faint: "#5A5A60",
+          primary: "rgb(var(--ink-primary) / <alpha-value>)",
+          muted: "rgb(var(--ink-muted) / <alpha-value>)",
+          faint: "rgb(var(--ink-faint) / <alpha-value>)",
         },
         line: {
-          hairline: "rgba(255,255,255,0.08)",
-          strong: "rgba(255,255,255,0.16)",
+          hairline: "rgb(var(--line) / 0.08)",
+          strong: "rgb(var(--line) / 0.16)",
         },
         accent: {
-          DEFAULT: "#CE2B37",
-          muted: "#A8323A",
+          DEFAULT: "rgb(var(--accent) / <alpha-value>)",
+          muted: "rgb(var(--accent-muted) / <alpha-value>)",
         },
       },
       fontFamily: {

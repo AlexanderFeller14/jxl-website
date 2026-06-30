@@ -43,9 +43,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0B",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0A0A0B" },
+    { media: "(prefers-color-scheme: light)", color: "#F5F4F0" },
+  ],
+  colorScheme: "dark light",
 };
+
+// Set the theme before first paint to avoid a flash. Defaults to dark
+// (the brand default) unless the visitor previously chose light.
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
 export default function RootLayout({
   children,
@@ -56,7 +63,11 @@ export default function RootLayout({
     <html
       lang={site.locale}
       className={`${fontDisplay.variable} ${fontSans.variable} scroll-smooth`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-screen bg-bg-base text-ink-primary">
         <a
           href="#main"

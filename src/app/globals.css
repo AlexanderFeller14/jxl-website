@@ -3,8 +3,34 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  /* Theme tokens as RGB channels so Tailwind alpha modifiers keep working.
+     Default + [data-theme="dark"] = dark; [data-theme="light"] = light.
+     The attribute selectors also let a subtree (hero, lightbox) pin a theme. */
+  :root,
+  [data-theme="dark"] {
+    --bg-base: 10 10 11;
+    --bg-raised: 17 17 19;
+    --bg-sunken: 7 7 8;
+    --ink-primary: 242 241 238;
+    --ink-muted: 138 138 143;
+    --ink-faint: 90 90 96;
+    --line: 255 255 255;
+    --accent: 206 43 55;
+    --accent-muted: 168 50 58;
     color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    --bg-base: 245 244 240;
+    --bg-raised: 255 255 255;
+    --bg-sunken: 233 231 225;
+    --ink-primary: 24 24 27;
+    --ink-muted: 90 90 96;
+    --ink-faint: 140 140 146;
+    --line: 17 17 19;
+    --accent: 206 43 55;
+    --accent-muted: 168 50 58;
+    color-scheme: light;
   }
 
   html {
@@ -24,23 +50,23 @@
 
   /* Quiet, editorial focus state */
   :focus-visible {
-    outline: 2px solid theme("colors.accent.DEFAULT");
+    outline: 2px solid rgb(var(--accent));
     outline-offset: 3px;
     border-radius: 1px;
   }
 
-  /* Thin custom scrollbar to match the dark base */
+  /* Thin custom scrollbar that follows the theme */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: theme("colors.bg.base");
+    background: rgb(var(--bg-base));
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(var(--ink-primary) / 0.18);
     border-radius: 999px;
-    border: 3px solid theme("colors.bg.base");
+    border: 3px solid rgb(var(--bg-base));
   }
 }
 

@@ -73,6 +73,7 @@ export function Lightbox({ images, index, onClose, onIndex }: LightboxProps) {
           role="dialog"
           aria-modal="true"
           aria-label="Image viewer"
+          data-theme="dark"
           className="fixed inset-0 z-[100] flex flex-col bg-bg-sunken"
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}

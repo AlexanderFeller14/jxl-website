@@ -21,7 +21,10 @@ export function Hero() {
         };
 
   return (
-    <section className="relative h-[100svh] min-h-[660px] w-full overflow-hidden">
+    <section
+      data-theme="dark"
+      className="relative h-[100svh] min-h-[660px] w-full overflow-hidden bg-bg-base text-ink-primary"
+    >
       {/* Cover image */}
       <Image
         src={HERO_IMAGE}
