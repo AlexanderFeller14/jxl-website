@@ -54,8 +54,16 @@ export function Nav() {
     };
   }, [open]);
 
+  // The homepage hero is always dark. While the nav sits transparent over it
+  // (top of page, menu closed), pin the nav to the dark theme so its text and
+  // icons stay light, regardless of the visitor's light/dark choice. Once a
+  // solid backdrop appears (scrolled) or the mobile menu opens, follow the page
+  // theme again.
+  const overHero = pathname === "/" && !scrolled && !open;
+
   return (
     <header
+      data-theme={overHero ? "dark" : undefined}
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-editorial",
         scrolled || open
