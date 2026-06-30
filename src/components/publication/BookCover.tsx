@@ -57,14 +57,22 @@ export function BookCover({
         className,
       )}
     >
-      <Image
-        src={publication.cover}
-        alt={`${publication.title}, cover`}
-        fill
-        priority={priority}
-        sizes={sizes}
-        className="object-cover"
-      />
+      {publication.cover ? (
+        <Image
+          src={publication.cover}
+          alt={`${publication.title}, cover`}
+          fill
+          priority={priority}
+          sizes={sizes}
+          className="object-cover"
+        />
+      ) : (
+        // Coming-soon editions have no photo yet — a quiet dark placeholder.
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-br from-bg-raised via-bg-sunken to-black"
+        />
+      )}
 
       {/* Legibility gradients */}
       <div

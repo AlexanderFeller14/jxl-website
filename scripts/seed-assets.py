@@ -20,56 +20,33 @@ OUT = ROOT / "public" / "publications"
 
 # slug -> cover source + ordered (section label, [sources]) groups.
 # Gallery files are numbered sequentially across sections in declared order.
+# Only folders that contain photos are seeded. Empty event folders become
+# "coming soon" publications (handled in src/data/publications.ts).
+# Image filenames mirror public/media/<event>/ — sourced from the optimized
+# variants for performance.
 PUBLICATIONS = {
     "24h-nuerburgring-2025": {
         "title": "24H Nürburgring 2025",
         "meta": "Nürburgring · Germany · May 2025",
-        "cover": "CK1A9131",
+        "cover": "CK1A9107",
         "sections": [
-            ("Arrival", ["CK1A1682", "CK1A2044"]),
-            ("Practice", ["CK1A2185", "CK1A8986"]),
-            ("Race", ["CK1A6585", "CK1A2429"]),
-            ("Night", ["CK1A8575-Enhanced-NR", "CK1A9107", "CK1A9960"]),
-            ("Details", ["CK1A7012", "CK1A7138"]),
-            ("Victory", ["CK1A2572", "CK1A6968"]),
+            ("Arrival", ["CK1A1682", "CK1A2347", "CK1A2185"]),
+            ("Race", ["CK1A8005", "CK1A7967", "CK1A6184-2 2", "CK1A2429"]),
+            ("Night", ["CK1A8575-Enhanced-NR"]),
+            ("Atmosphere", [
+                "CK1A1879", "CK1A2044", "CK1A5161 2",
+                "CK1A6916 2", "CK1A2572", "CK1A4624 2",
+            ]),
         ],
     },
-    "24h-le-mans-2026": {
-        "title": "24H Le Mans 2026",
-        "meta": "Le Mans · France · June 2026",
-        "cover": "_MG_9944",
+    "f1-monza-2024": {
+        "title": "F1 Monza 2024",
+        "meta": "Monza · Italy · September 2024",
+        "cover": "CK1A7249",
         "sections": [
-            ("Atmosphere", ["_MG_9897", "CK1A5161 2", "CK1A6916 2"]),
-        ],
-    },
-    "24h-nuerburgring-2024": {
-        "title": "24H Nürburgring 2024",
-        "meta": "Nürburgring · Germany · May 2024",
-        "cover": "CK1A8005",
-        "sections": [
-            ("Practice", ["CK1A1879", "CK1A4624 2"]),
-            ("Race", ["CK1A6184-2 2", "CK1A7249"]),
-            ("Night", ["CK1A9013", "CK1A9107"]),
-        ],
-    },
-    "24h-nuerburgring-2022": {
-        "title": "24H Nürburgring 2022",
-        "meta": "Nürburgring · Germany · May 2022",
-        "cover": "CK1A2347",
-        "sections": [
-            ("Arrival", ["CK1A1682", "CK1A7967"]),
-            ("Race", ["CK1A2185", "CK1A8986"]),
-            ("Atmosphere", ["CK1A9960", "CK1A8575-Enhanced-NR"]),
-        ],
-    },
-    "bergrennen-gurnigel-2022": {
-        "title": "Bergrennen Gurnigel 2022",
-        "meta": "Gurnigel · Switzerland · Sept 2022",
-        "cover": "CK1A7967",
-        "sections": [
-            ("Practice", ["CK1A6585", "CK1A2429"]),
-            ("Race", ["CK1A7249", "CK1A6184-2 2"]),
-            ("Atmosphere", ["_MG_9897"]),
+            ("Practice", ["CK1A6968", "_MG_9944"]),
+            ("Race", ["CK1A6585", "CK1A7012"]),
+            ("Atmosphere", ["_MG_9897", "CK1A7138"]),
         ],
     },
 }

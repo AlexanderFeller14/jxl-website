@@ -91,16 +91,20 @@ export function PublicationHero({
               View Gallery
             </ButtonLink>
           )}
-          <ButtonLink
-            href={p.pdf}
-            variant={comingSoon ? "outline" : "ghost"}
-            newTab
-          >
-            <span className="inline-flex items-center gap-2">
-              {comingSoon ? "Preview Brochure (PDF)" : "Download Brochure (PDF)"}
-              <span aria-hidden>↓</span>
-            </span>
-          </ButtonLink>
+          {p.pdf ? (
+            <ButtonLink href={p.pdf} variant="ghost" newTab>
+              <span className="inline-flex items-center gap-2">
+                Download Brochure (PDF)
+                <span aria-hidden>↓</span>
+              </span>
+            </ButtonLink>
+          ) : (
+            comingSoon && (
+              <p className="text-[0.7rem] uppercase tracking-[0.2em] text-ink-muted">
+                Full publication coming soon
+              </p>
+            )
+          )}
         </div>
       </div>
 

@@ -31,7 +31,7 @@ export function generateMetadata({ params }: Params): Metadata {
       title: `${p.title} · JXL-Visuals`,
       description: p.description,
       type: "article",
-      images: [{ url: p.cover, alt: p.title }],
+      images: p.cover ? [{ url: p.cover, alt: p.title }] : undefined,
     },
   };
 }
