@@ -94,18 +94,6 @@ export function Hero() {
             </p>
             <span className="mt-3 block h-0.5 w-14 bg-accent" />
           </motion.div>
-
-          <motion.div
-            {...rise(0.5)}
-            className="flex h-[68px] w-[68px] flex-col items-center justify-center border border-ink-primary/40 md:h-24 md:w-24"
-          >
-            <span className="font-display text-2xl leading-none tracking-wide text-ink-primary md:text-3xl">
-              JXL
-            </span>
-            <span className="mt-1 font-sans text-[0.45rem] uppercase tracking-[0.35em] text-accent md:text-[0.5rem]">
-              Visuals
-            </span>
-          </motion.div>
         </div>
       </div>
     </section>

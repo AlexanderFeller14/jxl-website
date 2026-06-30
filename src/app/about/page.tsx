@@ -47,7 +47,7 @@ export default function AboutPage() {
         <Reveal>
           <div className="relative aspect-[3/2] w-full overflow-hidden bg-bg-sunken">
             <Image
-              src="/media/24h-poster.png"
+              src="/media/nbr-2025/24h-poster.png"
               alt="Twenty Four Hours, JXL-Visuals endurance racing poster: a GT3 car trailing red light at night"
               fill
               sizes="(max-width: 1024px) 100vw, 1440px"
