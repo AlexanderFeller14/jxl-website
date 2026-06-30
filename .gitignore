@@ -5,6 +5,12 @@ node_modules/
 dist/
 output/
 
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
 # Lokales Backup der alten Seite (liegt zusätzlich im Git-Tag pre-redesign-2026-06-30)
 backup/
 

@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-bg-base text-ink-primary font-sans antialiased;
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  ::selection {
+    @apply bg-accent/90 text-ink-primary;
+  }
+
+  /* Quiet, editorial focus state */
+  :focus-visible {
+    outline: 2px solid theme("colors.accent.DEFAULT");
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* Thin custom scrollbar to match the dark base */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme("colors.bg.base");
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    border: 3px solid theme("colors.bg.base");
+  }
+}
+
+@layer components {
+  /* Display headlines: condensed caps with controlled tracking */
+  .u-display {
+    @apply font-display uppercase leading-[0.92];
+  }
+
+  /* Letter-spaced uppercase eyebrow/label */
+  .u-eyebrow {
+    @apply font-sans uppercase text-eyebrow tracking-eyebrow text-ink-muted;
+  }
+
+  .u-measure {
+    @apply max-w-measure;
+  }
+
+  /* Hairline divider used across editorial layouts */
+  .u-rule {
+    @apply border-t border-line-hairline;
+  }
+
+  /* Animated underline link (subtle) */
+  .u-link {
+    @apply relative inline-flex items-center gap-2 text-ink-primary transition-colors duration-300 ease-editorial hover:text-ink-primary;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
