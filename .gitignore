@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+output/
+
+# Lokales Backup der alten Seite (liegt zusätzlich im Git-Tag pre-redesign-2026-06-30)
+backup/
+
+# Vite cache
+.vite/
+
+# Environment / secrets (das Beispiel .env.example bleibt getrackt)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Tooling / Test-Artefakte
+.playwright-cli/
+playwright-report/
+test-results/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
