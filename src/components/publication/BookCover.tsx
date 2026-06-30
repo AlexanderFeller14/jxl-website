@@ -48,7 +48,8 @@ export function BookCover({
   className,
 }: BookCoverProps) {
   const [place, country] = placeAndCountry(publication.location);
-  const titleWords = publication.title.split(" ");
+  // Explicit cover lines when set, otherwise stack the title word by word.
+  const titleWords = publication.coverTitle ?? publication.title.split(" ");
 
   return (
     <div
@@ -65,6 +66,11 @@ export function BookCover({
           priority={priority}
           sizes={sizes}
           className="object-cover"
+          style={
+            publication.coverPosition
+              ? { objectPosition: publication.coverPosition }
+              : undefined
+          }
         />
       ) : (
         // Coming-soon editions have no photo yet — a quiet dark placeholder.

@@ -50,6 +50,11 @@ export type PublicationStatus = "published" | "coming-soon";
 export interface Publication {
   slug: string;
   title: string;
+  /** Explicit line breaks for the stacked cover title (defaults to splitting
+   *  the title on spaces, e.g. keep "Le Mans" on one line). */
+  coverTitle?: string[];
+  /** CSS object-position for the cover crop, e.g. "25% 50%" to centre a subject. */
+  coverPosition?: string;
   subtitle: string;
   location: string;
   category: PublicationCategory;
@@ -79,11 +84,12 @@ export const publications: Publication[] = [
     subtitle: "Four days. One track. Hundreds of stories.",
     location: "Nürburgring, Germany",
     category: "Nürburgring",
-    date: "2025-05-29",
-    dateLabel: "29 May – 1 June 2025",
+    date: "2025-06-19",
+    dateLabel: "19 – 22 June 2025",
     circuit: "Nürburgring Nordschleife",
     format: "Digital Brochure",
     cover: `${base("24h-nuerburgring-2025")}/cover.jpg`,
+    coverPosition: "25% 50%",
     pdf: `${base("24h-nuerburgring-2025")}/brochure.pdf`,
     description:
       "The 24-hour race at the Nürburgring is more than a race. It is a test of everything. Twenty-four hours through fog, rain and floodlight in the Eifel. This is our visual story.",
@@ -114,18 +120,21 @@ export const publications: Publication[] = [
       {
         label: "Night",
         caption: "Another world after dark.",
-        images: [`${base("24h-nuerburgring-2025")}/gallery/08.jpg`],
+        images: [
+          `${base("24h-nuerburgring-2025")}/gallery/08.jpg`,
+          `${base("24h-nuerburgring-2025")}/gallery/09.jpg`,
+        ],
       },
       {
         label: "Atmosphere",
         caption: "The mood of the Eifel.",
         images: [
-          `${base("24h-nuerburgring-2025")}/gallery/09.jpg`,
           `${base("24h-nuerburgring-2025")}/gallery/10.jpg`,
           `${base("24h-nuerburgring-2025")}/gallery/11.jpg`,
           `${base("24h-nuerburgring-2025")}/gallery/12.jpg`,
           `${base("24h-nuerburgring-2025")}/gallery/13.jpg`,
           `${base("24h-nuerburgring-2025")}/gallery/14.jpg`,
+          `${base("24h-nuerburgring-2025")}/gallery/15.jpg`,
         ],
       },
     ],
@@ -177,20 +186,37 @@ export const publications: Publication[] = [
   {
     slug: "24h-le-mans-2026",
     title: "24H Le Mans 2026",
-    subtitle: "The greatest race in the world. Coming soon.",
+    coverTitle: ["24H", "Le Mans", "2026"],
+    subtitle: "A century of speed down the Mulsanne.",
     location: "Le Mans, France",
     category: "Le Mans",
     date: "2026-06-13",
-    dateLabel: "June 2026",
+    dateLabel: "13 – 14 June 2026",
     circuit: "Circuit de la Sarthe",
     format: "Digital Brochure",
+    cover: `${base("24h-le-mans-2026")}/cover.jpg`,
+    pdf: `${base("24h-le-mans-2026")}/brochure.pdf`,
     description:
-      "A century of speed down the Mulsanne. Our next publication follows the 24 Hours of Le Mans. Coming soon.",
+      "A century of speed down the Mulsanne. Hypercars and GT machinery through dusk, midnight and the long road to the finish at the greatest race in the world.",
     featured: true,
-    status: "coming-soon",
-    photos: "Coming soon",
+    pages: 56,
+    photos: "60+",
     tags: ["endurance", "le-mans", "hypercar"],
-    gallery: [],
+    gallery: [
+      {
+        label: "Race",
+        caption: "Hypercars at full chat.",
+        images: [
+          `${base("24h-le-mans-2026")}/gallery/01.jpg`,
+          `${base("24h-le-mans-2026")}/gallery/02.jpg`,
+        ],
+      },
+      {
+        label: "Atmosphere",
+        caption: "The Sarthe, in motion.",
+        images: [`${base("24h-le-mans-2026")}/gallery/03.jpg`],
+      },
+    ],
   },
   {
     slug: "24h-nuerburgring-2024",
@@ -202,12 +228,22 @@ export const publications: Publication[] = [
     dateLabel: "30 May – 2 June 2024",
     circuit: "Nürburgring Nordschleife",
     format: "Digital Brochure",
+    cover: "/media/optimized/main-1800/CK1A9919.JPG",
+    coverPosition: "27% 50%",
     description:
-      "Our 2024 edition from the Nordschleife. The full publication is in production.",
-    status: "coming-soon",
-    photos: "Coming soon",
+      "Golden hour over the Nordschleife and a long night in the Eifel.",
+    photos: "2",
     tags: ["endurance", "nordschleife", "gt3"],
-    gallery: [],
+    gallery: [
+      {
+        label: "Race",
+        caption: "Through the Eifel.",
+        images: [
+          "/media/optimized/main-1800/CK1A9467.JPG",
+          "/media/optimized/main-1800/CK1A9919.JPG",
+        ],
+      },
+    ],
   },
   {
     slug: "24h-nuerburgring-2022",

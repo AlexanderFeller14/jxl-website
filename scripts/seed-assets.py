@@ -27,12 +27,12 @@ OUT = ROOT / "public" / "publications"
 PUBLICATIONS = {
     "24h-nuerburgring-2025": {
         "title": "24H Nürburgring 2025",
-        "meta": "Nürburgring · Germany · May 2025",
-        "cover": "CK1A9107",
+        "meta": "Nürburgring · Germany · June 2025",
+        "cover": "CK1A7823",
         "sections": [
             ("Arrival", ["CK1A1682", "CK1A2347", "CK1A2185"]),
             ("Race", ["CK1A8005", "CK1A7967", "CK1A6184-2 2", "CK1A2429"]),
-            ("Night", ["CK1A8575-Enhanced-NR"]),
+            ("Night", ["CK1A8575-Enhanced-NR", "CK1A9107"]),
             ("Atmosphere", [
                 "CK1A1879", "CK1A2044", "CK1A5161 2",
                 "CK1A6916 2", "CK1A2572", "CK1A4624 2",
@@ -47,6 +47,15 @@ PUBLICATIONS = {
             ("Practice", ["CK1A6968", "_MG_9944"]),
             ("Race", ["CK1A6585", "CK1A7012"]),
             ("Atmosphere", ["_MG_9897", "CK1A7138"]),
+        ],
+    },
+    "24h-le-mans-2026": {
+        "title": "24H Le Mans 2026",
+        "meta": "Le Mans · France · June 2026",
+        "cover": "CK1A0426",
+        "sections": [
+            ("Race", ["CK1A0232", "CK1A3702"]),
+            ("Atmosphere", ["prosche-91-le-mans"]),
         ],
     },
 }
