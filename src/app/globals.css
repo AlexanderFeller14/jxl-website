@@ -17,6 +17,11 @@
     --line: 255 255 255;
     --accent: 206 43 55;
     --accent-muted: 168 50 58;
+    /* Book / cover shadows — deep on the near-black base. */
+    --shadow-book: 0 2px 6px rgba(0, 0, 0, 0.4), 0 18px 40px rgba(0, 0, 0, 0.55);
+    --shadow-book-hover: 0 4px 10px rgba(0, 0, 0, 0.45),
+      0 36px 80px rgba(0, 0, 0, 0.7);
+    --shadow-floor: rgba(0, 0, 0, 0.55);
     color-scheme: dark;
   }
 
@@ -30,6 +35,12 @@
     --line: 17 17 19;
     --accent: 206 43 55;
     --accent-muted: 168 50 58;
+    /* Softer, cooler, layered — a refined lift on cream, never a black halo. */
+    --shadow-book: 0 1px 2px rgba(28, 28, 34, 0.06),
+      0 10px 24px rgba(28, 28, 34, 0.12), 0 22px 48px rgba(28, 28, 34, 0.1);
+    --shadow-book-hover: 0 4px 8px rgba(28, 28, 34, 0.1),
+      0 18px 40px rgba(28, 28, 34, 0.16), 0 34px 66px rgba(28, 28, 34, 0.14);
+    --shadow-floor: rgba(28, 28, 34, 0.2);
     color-scheme: light;
   }
 
@@ -37,11 +48,18 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Stop iOS/Safari from auto-inflating type in landscape. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
     @apply bg-bg-base text-ink-primary font-sans antialiased;
     font-feature-settings: "ss01", "cv01";
+    /* No grey flash when tapping links/buttons on touch devices. */
+    -webkit-tap-highlight-color: transparent;
+    /* Belt-and-braces against horizontal overflow on small screens. */
+    overflow-x: hidden;
   }
 
   ::selection {

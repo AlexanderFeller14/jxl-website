@@ -38,7 +38,7 @@ export function BookCoverMockup({
         />
 
         {/* Front cover */}
-        <div className="relative [transform:translateZ(16px)] shadow-[0_40px_90px_rgba(0,0,0,0.7)]">
+        <div className="relative [transform:translateZ(16px)] shadow-book-hover">
           <BookCover
             publication={publication}
             priority
@@ -50,7 +50,7 @@ export function BookCoverMockup({
       {/* Floor shadow */}
       <div
         aria-hidden
-        className="absolute -bottom-8 left-1/2 h-12 w-[78%] -translate-x-1/2 rounded-[50%] bg-black/55 blur-2xl"
+        className="absolute -bottom-8 left-1/2 h-12 w-[78%] -translate-x-1/2 rounded-[50%] bg-[var(--shadow-floor)] blur-2xl"
       />
     </div>
   );

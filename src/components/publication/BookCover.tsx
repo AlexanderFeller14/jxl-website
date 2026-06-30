@@ -34,6 +34,8 @@ interface BookCoverProps {
   priority?: boolean;
   sizes?: string;
   className?: string;
+  /** Extra classes on the photo itself — used for the slow hover zoom. */
+  imageClassName?: string;
 }
 
 /**
@@ -46,6 +48,7 @@ export function BookCover({
   priority,
   sizes = "(max-width: 768px) 60vw, 20vw",
   className,
+  imageClassName,
 }: BookCoverProps) {
   const [place, country] = placeAndCountry(publication.location);
   // Explicit cover lines when set, otherwise stack the title word by word.
@@ -65,7 +68,7 @@ export function BookCover({
           fill
           priority={priority}
           sizes={sizes}
-          className="object-cover"
+          className={cn("object-cover", imageClassName)}
           style={
             publication.coverPosition
               ? { objectPosition: publication.coverPosition }

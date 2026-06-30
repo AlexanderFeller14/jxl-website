@@ -75,9 +75,9 @@ const config: Config = {
         "section-sm": "clamp(3.5rem, 8vw, 7rem)",
       },
       boxShadow: {
-        book: "0 2px 6px rgba(0,0,0,0.4), 0 18px 40px rgba(0,0,0,0.55)",
-        "book-hover":
-          "0 4px 10px rgba(0,0,0,0.45), 0 36px 80px rgba(0,0,0,0.7)",
+        // Theme-aware: resolved from CSS variables (see globals.css).
+        book: "var(--shadow-book)",
+        "book-hover": "var(--shadow-book-hover)",
       },
       transitionTimingFunction: {
         editorial: "cubic-bezier(0.22, 1, 0.36, 1)",

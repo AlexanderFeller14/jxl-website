@@ -27,6 +27,7 @@ export function Lightbox({ images, index, onClose, onIndex }: LightboxProps) {
   const reduce = useReducedMotion();
   const open = index !== null;
   const closeRef = useRef<HTMLButtonElement>(null);
+  const touchStartX = useRef<number | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -39,6 +40,17 @@ export function Lightbox({ images, index, onClose, onIndex }: LightboxProps) {
     },
     [index, images.length, onIndex],
   );
+
+  // Swipe left/right to move between frames on touch devices.
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = (e.changedTouches[0]?.clientX ?? 0) - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -81,7 +93,7 @@ export function Lightbox({ images, index, onClose, onIndex }: LightboxProps) {
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Top bar */}
-          <div className="flex items-center justify-between px-6 py-5 md:px-10">
+          <div className="flex items-center justify-between px-6 py-5 pt-[max(1.25rem,env(safe-area-inset-top))] md:px-10">
             <p className="font-sans text-xs uppercase tracking-[0.2em] text-ink-muted">
               <span className="text-ink-primary">{index! + 1}</span>
               <span className="mx-2 text-ink-faint">/</span>
@@ -102,7 +114,11 @@ export function Lightbox({ images, index, onClose, onIndex }: LightboxProps) {
           </div>
 
           {/* Stage */}
-          <div className="relative flex flex-1 items-center justify-center px-4 md:px-20">
+          <div
+            className="relative flex flex-1 items-center justify-center px-4 md:px-20"
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
             <button
               type="button"
               onClick={() => go(-1)}
@@ -143,7 +159,7 @@ export function Lightbox({ images, index, onClose, onIndex }: LightboxProps) {
           </div>
 
           {/* Filmstrip */}
-          <div className="px-4 pb-6 pt-3 md:px-10">
+          <div className="px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 md:px-10">
             <div className="mx-auto flex max-w-4xl gap-2 overflow-x-auto pb-1">
               {images.map((img, i) => (
                 <button
