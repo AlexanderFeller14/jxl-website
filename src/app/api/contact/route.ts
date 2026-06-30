@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const to = process.env.CONTACT_TO_EMAIL || "hello@jxl-visuals.com";
+  const to = process.env.CONTACT_TO_EMAIL || "alex@jxl-visuals.com";
   const from = process.env.CONTACT_FROM_EMAIL || process.env.SMTP_USER || to;
   const subject = subjectTopic
     ? `New enquiry: ${subjectTopic} (${name})`

@@ -9,7 +9,7 @@ export const site = {
   description:
     "A digital publishing house dedicated to motorsport. Every race weekend becomes a collectible publication, documented through photography, atmosphere and editorial design.",
   url: "https://jxl-visuals.com",
-  email: "hello@jxl-visuals.com",
+  email: "alex@jxl-visuals.com",
   locale: "en",
   nav: [
     { label: "Home", href: "/" },
@@ -19,8 +19,7 @@ export const site = {
     { label: "Contact", href: "/contact" },
   ],
   social: [
-    { label: "Instagram", href: "https://instagram.com" },
-    { label: "Threads", href: "https://threads.net" },
+    { label: "Instagram", href: "https://instagram.com/jxl_visuals" },
   ],
 } as const;
 
