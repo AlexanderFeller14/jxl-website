@@ -69,8 +69,6 @@ export interface Publication {
   pdf?: string;
   featured?: boolean;
   status?: PublicationStatus; // defaults to "published"
-  pages?: number;
-  photos?: string; // display string, e.g. "180+"
   /** Future-proofing: search / filtering / related. */
   tags?: string[];
 }
@@ -94,8 +92,6 @@ export const publications: Publication[] = [
     description:
       "The 24-hour race at the Nürburgring is more than a race. It is a test of everything. Twenty-four hours through fog, rain and floodlight in the Eifel. This is our visual story.",
     featured: true,
-    pages: 82,
-    photos: "180+",
     tags: ["endurance", "nordschleife", "gt3", "night"],
     gallery: [
       {
@@ -173,8 +169,6 @@ export const publications: Publication[] = [
     pdf: `${base("f1-monza-2024")}/brochure.pdf`,
     description:
       "Monza. The Temple of Speed. A weekend of slipstreams, late braking into the first chicane and the roar of the tifosi at the fastest circuit on the Formula 1 calendar.",
-    pages: 48,
-    photos: "70+",
     tags: ["formula-1", "monza", "grand-prix"],
     gallery: [
       {
@@ -219,8 +213,6 @@ export const publications: Publication[] = [
     description:
       "A century of speed down the Mulsanne. Hypercars and GT machinery through dusk, midnight and the long road to the finish at the greatest race in the world.",
     featured: true,
-    pages: 56,
-    photos: "60+",
     tags: ["endurance", "le-mans", "hypercar"],
     gallery: [
       {
@@ -260,7 +252,6 @@ export const publications: Publication[] = [
     coverPosition: "27% 50%",
     description:
       "Golden hour over the Nordschleife, a long night in the Eifel — and the fog that brought the race to a standstill.",
-    photos: "25",
     tags: ["endurance", "nordschleife", "gt3", "fog"],
     gallery: [
       {
@@ -323,10 +314,8 @@ export const publications: Publication[] = [
     circuit: "Nürburgring Nordschleife",
     format: "Digital Brochure",
     cover: `${base("24h-nuerburgring-2022")}/cover.jpg`,
-    coverPosition: "37% 50%",
     description:
       "The return to a full-capacity Eifel classic. GT3 machinery hunting through the Green Hell, from the Hatzenbach to the Döttinger Höhe.",
-    photos: "9",
     tags: ["endurance", "nordschleife", "gt3"],
     gallery: [
       {

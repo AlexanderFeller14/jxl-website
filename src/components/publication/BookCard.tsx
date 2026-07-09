@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Publication } from "@/data/publications";
-import { getYear } from "@/lib/publications";
+import { getTotalPhotoCount, getYear } from "@/lib/publications";
 import { cn } from "@/lib/cn";
 import { BookCover } from "./BookCover";
 
@@ -15,8 +15,7 @@ interface BookCardProps {
 
 function meta(p: Publication): string {
   if (p.status === "coming-soon") return "Coming Soon";
-  if (p.pages) return `${p.pages} Pages`;
-  return `${p.gallery.reduce((n, s) => n + s.images.length, 0)} Photos`;
+  return `${getTotalPhotoCount(p)} Photos`;
 }
 
 /**

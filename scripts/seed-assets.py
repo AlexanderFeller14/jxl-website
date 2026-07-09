@@ -78,7 +78,7 @@ PUBLICATIONS = {
     "24h-nuerburgring-2022": {
         "title": "24H Nürburgring 2022",
         "meta": "Nürburgring · Germany · May 2022",
-        "cover": "IMG_3449",
+        "cover": "IMG_3449-cover",
         "sections": [
             ("Race", [
                 "AMG-4886", "AMG-5136", "Ferrari-5126",

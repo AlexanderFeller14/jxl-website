@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Publication } from "@/data/publications";
+import { getTotalPhotoCount } from "@/lib/publications";
 import { cn } from "@/lib/cn";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ButtonLink } from "@/components/ui/Button";
@@ -75,35 +76,21 @@ export function PublicationHero({
           <MetaRow label="Date" value={p.dateLabel} />
           <MetaRow label="Format" value={p.format} />
           <MetaRow
-            label="Pages"
-            value={comingSoon ? "Coming soon" : p.pages ? String(p.pages) : "–"}
-          />
-          <MetaRow
             label="Photos"
-            value={p.photos ?? "–"}
+            value={comingSoon ? "Coming soon" : String(getTotalPhotoCount(p))}
           />
         </dl>
 
         {/* Actions */}
         <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
-          {!comingSoon && (
+          {!comingSoon ? (
             <ButtonLink href={galleryHref} variant="primary" arrow>
               View Gallery
             </ButtonLink>
-          )}
-          {p.pdf ? (
-            <ButtonLink href={p.pdf} variant="ghost" newTab>
-              <span className="inline-flex items-center gap-2">
-                Download Brochure (PDF)
-                <span aria-hidden>↓</span>
-              </span>
-            </ButtonLink>
           ) : (
-            comingSoon && (
-              <p className="text-[0.7rem] uppercase tracking-[0.2em] text-ink-muted">
-                Full publication coming soon
-              </p>
-            )
+            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-ink-muted">
+              Full publication coming soon
+            </p>
           )}
         </div>
       </div>
