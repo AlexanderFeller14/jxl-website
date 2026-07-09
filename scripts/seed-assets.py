@@ -10,13 +10,16 @@ Swapping in real photography later = drop files into these folders. No code
 changes needed. Re-run with:  python3 scripts/seed-assets.py
 """
 from __future__ import annotations
+import json
 import shutil
+import subprocess
 import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "public" / "media" / "optimized" / "main-1800"
 OUT = ROOT / "public" / "publications"
+MANIFEST = ROOT / "src" / "data" / "gallery-manifest.json"
 
 # slug -> cover source + ordered (section label, [sources]) groups.
 # Gallery files are numbered sequentially across sections in declared order.
@@ -30,13 +33,59 @@ PUBLICATIONS = {
         "meta": "Nürburgring · Germany · June 2025",
         "cover": "CK1A7823",
         "sections": [
-            ("Arrival", ["CK1A1682", "CK1A2347", "CK1A2185"]),
-            ("Race", ["CK1A8005", "CK1A7967", "CK1A6184-2 2", "CK1A2429"]),
-            ("Night", ["CK1A8575-Enhanced-NR", "CK1A9107"]),
+            ("Arrival", [
+                "CK1A1682", "CK1A2347", "CK1A2185",
+                "Auto-0049", "amg-4363",
+            ]),
+            ("Race", [
+                "CK1A8005", "CK1A7967", "CK1A6184-2 2", "CK1A2429",
+                "Aston-5414", "Audi-5394", "Auto-1276", "Aston-5642",
+                "NBR-4047",
+            ]),
+            ("Night", [
+                "CK1A8575-Enhanced-NR", "CK1A9107",
+                "NBR-1", "NBR--1", "NBR-6", "nbr-9-6963", "Aston-7715",
+            ]),
+            ("People", ["NBR-4272", "NBR-4368"]),
             ("Atmosphere", [
                 "CK1A1879", "CK1A2044", "CK1A5161 2",
                 "CK1A6916 2", "CK1A2572", "CK1A4624 2",
             ]),
+        ],
+    },
+    "24h-nuerburgring-2024": {
+        "title": "24H Nürburgring 2024",
+        "meta": "Nürburgring · Germany · June 2024",
+        "cover": "CK1A9919",
+        "sections": [
+            ("Arrival", ["bts-amg-9994"]),
+            ("Race", [
+                "ASTON-1183", "ASTON-1610", "aston-walkenhorst",
+                "Aston-9381", "ferrari-1318", "porsche-1283",
+                "lambo-9447", "CK1A9467", "CK1A9919",
+                "Alle-9553", "Alle-9596", "Alle-9605",
+            ]),
+            ("Night", [
+                "Aston-", "Porsche-1695", "car-1809",
+                "CK1A0235", "CK1A0402-2-Enhanced-NR",
+            ]),
+            ("Atmosphere", [
+                "Aston-2787", "cars-2711", "cars-2760",
+                "cars-3078", "cars-3086", "aston-3110", "aston-3118",
+            ]),
+        ],
+    },
+    "24h-nuerburgring-2022": {
+        "title": "24H Nürburgring 2022",
+        "meta": "Nürburgring · Germany · May 2022",
+        "cover": "IMG_3449",
+        "sections": [
+            ("Race", [
+                "AMG-4886", "AMG-5136", "Ferrari-5126",
+                "IMG_3438", "IMG_3440", "AMG-5516",
+                "IMG_3412", "IMG_3449",
+            ]),
+            ("Atmosphere", ["BMW-5065-BW"]),
         ],
     },
     "f1-monza-2024": {
@@ -54,7 +103,11 @@ PUBLICATIONS = {
         "meta": "Le Mans · France · June 2026",
         "cover": "CK1A0426",
         "sections": [
-            ("Race", ["CK1A0232", "CK1A3702"]),
+            ("Race", [
+                "CK1A0232", "CK1A3702",
+                "CK1A0384", "CK1A1036", "CK1A7212",
+            ]),
+            ("Night", ["CK1A2589"]),
             ("Atmosphere", ["prosche-91-le-mans"]),
         ],
     },
@@ -62,10 +115,26 @@ PUBLICATIONS = {
 
 
 def src_path(name: str) -> Path:
-    p = SRC / f"{name}.JPG"
-    if not p.exists():
-        raise FileNotFoundError(f"Missing source image: {p}")
-    return p
+    for ext in (".JPG", ".jpg", ".jpeg"):
+        p = SRC / f"{name}{ext}"
+        if p.exists():
+            return p
+    raise FileNotFoundError(f"Missing source image: {SRC / name}.(JPG|jpg|jpeg)")
+
+
+def image_size(path: Path) -> tuple[int, int]:
+    """Read pixel dimensions via sips (macOS built-in, same tool as optimize)."""
+    out = subprocess.run(
+        ["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(path)],
+        capture_output=True, text=True, check=True,
+    ).stdout
+    width = height = 0
+    for line in out.splitlines():
+        if "pixelWidth" in line:
+            width = int(line.split()[-1])
+        elif "pixelHeight" in line:
+            height = int(line.split()[-1])
+    return width, height
 
 
 def ascii_text(s: str) -> str:
@@ -129,22 +198,34 @@ def pdf_escape(s: str) -> str:
 def main() -> None:
     if OUT.exists():
         shutil.rmtree(OUT)
+    manifest: dict[str, dict[str, int]] = {}
     for slug, pub in PUBLICATIONS.items():
         folder = OUT / slug
         gallery = folder / "gallery"
         gallery.mkdir(parents=True, exist_ok=True)
 
-        shutil.copyfile(src_path(pub["cover"]), folder / "cover.jpg")
+        cover_src = src_path(pub["cover"])
+        shutil.copyfile(cover_src, folder / "cover.jpg")
+        w, h = image_size(cover_src)
+        manifest[f"/publications/{slug}/cover.jpg"] = {"width": w, "height": h}
 
         idx = 1
         for _label, sources in pub["sections"]:
             for s in sources:
-                shutil.copyfile(src_path(s), gallery / f"{idx:02d}.jpg")
+                source = src_path(s)
+                shutil.copyfile(source, gallery / f"{idx:02d}.jpg")
+                w, h = image_size(source)
+                manifest[f"/publications/{slug}/gallery/{idx:02d}.jpg"] = {
+                    "width": w, "height": h,
+                }
                 idx += 1
 
         write_pdf(folder / "brochure.pdf", pub["title"], pub["meta"])
         print(f"  {slug}: cover + {idx - 1} gallery images + brochure.pdf")
 
+    MANIFEST.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+    print(f"Wrote image dimensions for {len(manifest)} files to "
+          f"{MANIFEST.relative_to(ROOT)}")
     print(f"Seeded {len(PUBLICATIONS)} publications into {OUT.relative_to(ROOT)}")
 
 

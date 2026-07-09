@@ -3,8 +3,19 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Publication } from "@/data/publications";
+import manifest from "@/data/gallery-manifest.json";
 import { cn } from "@/lib/cn";
 import { Lightbox, type LightboxImage } from "./Lightbox";
+
+const DIMENSIONS = manifest as Record<
+  string,
+  { width: number; height: number }
+>;
+
+function isPortrait(src: string): boolean {
+  const dims = DIMENSIONS[src];
+  return dims ? dims.height > dims.width : false;
+}
 
 interface EditorialGalleryProps {
   publication: Publication;
@@ -129,6 +140,11 @@ interface LayoutItem {
 /**
  * Editorial (non-masonry) layout: a full-bleed feature opens the chapter, the
  * rest fall into a measured two-column rhythm. Fixed aspect ratios = no CLS.
+ *
+ * Portrait frames keep their orientation: consecutive portraits pair up in a
+ * two-column row (two 2:3 frames read as one 4:3 block), a lone portrait is
+ * centred at reduced width, and a portrait feature opens the chapter as a
+ * centred tall frame instead of a 16:9 crop.
  */
 function SectionLayout({
   items,
@@ -140,27 +156,82 @@ function SectionLayout({
   const [feature, ...rest] = items;
   if (!feature) return null;
 
+  // Group the remaining frames into runs of equal orientation.
+  const chunks: { portrait: boolean; items: LayoutItem[] }[] = [];
+  for (const item of rest) {
+    const portrait = isPortrait(item.src);
+    const last = chunks[chunks.length - 1];
+    if (last && last.portrait === portrait) last.items.push(item);
+    else chunks.push({ portrait, items: [item] });
+  }
+
   return (
     <div className="space-y-6 md:space-y-8">
-      <GalleryFrame
-        item={feature}
-        onOpen={onOpen}
-        className="aspect-[16/9]"
-        sizes="(max-width: 1024px) 100vw, 1100px"
-        priority
-      />
-      {rest.length > 0 && (
-        <div className="grid gap-6 sm:grid-cols-2 md:gap-8">
-          {rest.map((item, i) => (
-            <GalleryFrame
-              key={item.src + i}
-              item={item}
-              onOpen={onOpen}
-              className="aspect-[4/3]"
-              sizes="(max-width: 640px) 100vw, 50vw"
-            />
-          ))}
-        </div>
+      {isPortrait(feature.src) ? (
+        <GalleryFrame
+          item={feature}
+          onOpen={onOpen}
+          className="block mx-auto aspect-[2/3] w-full max-w-[420px] md:max-w-[480px]"
+          sizes="(max-width: 640px) 100vw, 480px"
+          priority
+        />
+      ) : (
+        <GalleryFrame
+          item={feature}
+          onOpen={onOpen}
+          className="aspect-[16/9]"
+          sizes="(max-width: 1024px) 100vw, 1100px"
+          priority
+        />
+      )}
+      {chunks.map((chunk, c) =>
+        chunk.portrait && chunk.items.length === 1 ? (
+          <GalleryFrame
+            key={chunk.items[0].src + c}
+            item={chunk.items[0]}
+            onOpen={onOpen}
+            className="block mx-auto aspect-[2/3] w-full max-w-[420px] md:max-w-[480px]"
+            sizes="(max-width: 640px) 100vw, 480px"
+          />
+        ) : (
+          <div
+            key={chunk.items[0].src + c}
+            className={cn(
+              "grid gap-6 md:gap-8",
+              chunk.portrait ? "grid-cols-2" : "sm:grid-cols-2",
+            )}
+          >
+            {chunk.items.map((item, i) => {
+              // An odd chunk would leave an empty grid cell: centre a trailing
+              // portrait, let a trailing landscape run full width instead.
+              const trailingOdd =
+                chunk.items.length % 2 === 1 && i === chunk.items.length - 1;
+              return (
+                <GalleryFrame
+                  key={item.src + i}
+                  item={item}
+                  onOpen={onOpen}
+                  className={cn(
+                    chunk.portrait
+                      ? trailingOdd
+                        ? "col-span-2 mx-auto aspect-[2/3] w-full max-w-[420px] md:max-w-[480px]"
+                        : "aspect-[2/3]"
+                      : trailingOdd
+                        ? "aspect-[16/9] sm:col-span-2"
+                        : "aspect-[4/3]",
+                  )}
+                  sizes={
+                    chunk.portrait
+                      ? "(max-width: 640px) 50vw, 550px"
+                      : trailingOdd
+                        ? "(max-width: 1024px) 100vw, 1100px"
+                        : "(max-width: 640px) 100vw, 50vw"
+                  }
+                />
+              );
+            })}
+          </div>
+        ),
       )}
     </div>
   );

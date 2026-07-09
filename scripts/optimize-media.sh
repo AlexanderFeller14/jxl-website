@@ -64,7 +64,8 @@ while IFS= read -r -d '' source; do
   build_variant "$source" "$OUT_THUMB/$base_name" 360 74
   ((count += 1))
 done < <(
-  find "$MEDIA_DIR" -maxdepth 1 -type f \
+  find "$MEDIA_DIR" -type f \
+    -not -path "$OUT_ROOT/*" \
     \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) \
     -print0
 )
