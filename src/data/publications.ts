@@ -323,6 +323,7 @@ export const publications: Publication[] = [
     circuit: "Nürburgring Nordschleife",
     format: "Digital Brochure",
     cover: `${base("24h-nuerburgring-2022")}/cover.jpg`,
+    coverPosition: "37% 50%",
     description:
       "The return to a full-capacity Eifel classic. GT3 machinery hunting through the Green Hell, from the Hatzenbach to the Döttinger Höhe.",
     photos: "9",
