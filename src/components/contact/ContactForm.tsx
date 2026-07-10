@@ -121,7 +121,7 @@ export function ContactForm() {
           id="subject"
           name="subject"
           type="text"
-          placeholder="Commission, print enquiry, collaboration…"
+          placeholder="Commission, collaboration…"
           className={cn(fieldClass, "mt-2")}
         />
       </div>

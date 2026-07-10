@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Commissions, prints and collaborations. Get in touch with JXL-Visuals.",
+    "Commissions and collaborations. Get in touch with JXL-Visuals.",
 };
 
 export default function ContactPage() {
@@ -21,9 +21,8 @@ export default function ContactPage() {
             Let&apos;s document your race weekend.
           </h1>
           <p className="mt-7 max-w-measure-sm text-base leading-relaxed text-ink-muted">
-            For commissions, print enquiries, team and manufacturer
-            collaborations, or simply to talk motorsport, reach out below or
-            email directly.
+            For commissions, team and manufacturer collaborations, or simply
+            to talk motorsport, reach out below or email directly.
           </p>
 
           <div className="mt-12 space-y-6">
