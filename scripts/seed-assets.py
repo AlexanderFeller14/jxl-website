@@ -34,22 +34,21 @@ PUBLICATIONS = {
         "cover": "CK1A7823",
         "sections": [
             ("Arrival", [
-                "CK1A1682", "CK1A2347", "CK1A2185",
-                "Auto-0049", "amg-4363",
+                "Auto-0049", "amg-4363", "CK1A2347",
             ]),
             ("Race", [
                 "CK1A8005", "CK1A7967", "CK1A6184-2 2", "CK1A2429",
                 "Aston-5414", "Audi-5394", "Auto-1276", "Aston-5642",
-                "NBR-4047",
+                "NBR-4047", "CK1A7714", "CK1A7902",
             ]),
             ("Night", [
-                "CK1A8575-Enhanced-NR", "CK1A9107",
+                "CK1A7779", "CK1A8575-Enhanced-NR", "CK1A9107",
                 "NBR-1", "NBR--1", "NBR-6", "nbr-9-6963", "Aston-7715",
             ]),
             ("People", ["NBR-4272", "NBR-4368"]),
             ("Atmosphere", [
-                "CK1A1879", "CK1A2044", "CK1A5161 2",
-                "CK1A6916 2", "CK1A2572", "CK1A4624 2",
+                "CK1A2044", "CK1A5161 2",
+                "CK1A6916 2", "CK1A4624 2",
             ]),
         ],
     },
